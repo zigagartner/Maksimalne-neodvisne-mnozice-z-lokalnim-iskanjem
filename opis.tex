@@ -30,7 +30,7 @@ right  = 3.cm]{geometry}
         \textsc{\LARGE Univerza v Ljubljani}\\[0.5cm]
         {\Large Fakulteta za matematiko in fiziko}\\[3cm]
         {\large Finančni praktikum}\\[0.5cm]
-        {\huge Največja neodvisna množica z lokalnim iskanjem}\\[10.0cm]
+        {\huge Največje neodvisne množice z lokalnim iskanjem}\\[10.0cm]
     \end{center}
 
     \begin{minipage}{0.4\textwidth}
@@ -95,14 +95,24 @@ Problem največje neodvisne množice v grafu $G=(V,E)$ lahko s celoštevilskim l
 $$max \sum_{v \in V} x_{v},$$
 da velja:
 $$ x_{u} + x_{v} \leq 1 \ za \ \forall uv \in E,$$
-$$ x_{u} \in \{0, 1 \} \ za \ \forall u \in V.$$
+$$ x_{u} \in \{0, 1 \}$$
+$$ x_{u} = 
+    \begin{cases}
+    1, \ za \ u \in H \\
+    0, \ za \ u \notin H
+    \end{cases}, \text{H neodvisna množica v grafu G.}
+$$
 \end{posledica}
 
-Največjo neodvisno množico v množici vseh neodvisnih podmnožic grafa $G = (V,E)$ bomo iskali s pomočjo celoštevilskega lineranega programiranja in lokalnega iskanja. Lokalno iskanje temelji na
+Največjo neodvisno množico v množici vseh neodvisnih podmnožic grafa $G = (V,E)$ bomo iskali s pomočjo celoštevilskega lineranega programiranja in lokalnega iskanja. \textbf{Lokalno iskanje} temelji na
 izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozlišč zamenjamo s $k + 1$ vozlišči in pri tem ohranjamo neodvisnost množice $U$.
 
+\newpage
 
+\section{Nadaljnji potek dela}
 
+V nadaljevanju bomo optimalno rešitev, pridobljeno z uporabo celoštevilskega linearnega programiranja, primerjali z rešitvami dobljenimi z nekaterimi ostalimi pristopi za iskanje največje neodvisne množice v grafu.
+Postopek bomo ponovili za različne razrede grafov in nato analizirali odstopanja rešitev od optimalne rešitve. Za reševanje problema bomo uporabljali programski jezik $SAGE$.
 
 
 
