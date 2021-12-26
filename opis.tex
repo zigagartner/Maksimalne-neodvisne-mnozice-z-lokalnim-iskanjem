@@ -71,9 +71,8 @@ lokalnega iskanja in optimalne rešitve ter primerjali njune rešitve za nekater
 
 \section{Opis problema}
 \begin{definicija}
-    Naj bo $G = (V,E)$ graf. \textbf{Neodvisna množica} $U$, v grafu $G$, je taka podmnožica množice vozlišč $V$, kjer poljubni dve vozlišči iz množice $U$ nista sosednji. Torej:
-        $$U = \{u \in V | e(v,w) \notin E \ za \ \forall v,w \in U \}.$$
-    \textbf{Največja neodvisna množica} v grafu $G$ pa je taka neodvisna množica, kjer ne obstaja vozlišče $v \in V$ in $v \notin U$, ki bi ga lahko dodali množici $U$ in pri tem ohranili neodvisnost množice $U$. Torej
+    Naj bo $G = (V,E)$ graf. \textbf{Neodvisna množica} $U$, v grafu $G$, je taka podmnožica množice vozlišč $V$, kjer poljubni dve vozlišči iz množice $U$ nista sosednji.
+    \textbf{Maksimalna neodvisna množica} v grafu $G$ pa je taka neodvisna množica, kjer ne obstaja vozlišče $v \in V$ in $v \notin U$, ki bi ga lahko dodali množici $U$ in pri tem ohranili neodvisnost množice $U$. Torej
     je neodvisna množica $U$ največja taka, če velja ena od naslednjih dveh lastnosti:
     \begin{enumerate}
         \item $v \in U$
@@ -94,13 +93,13 @@ lokalnega iskanja in optimalne rešitve ter primerjali njune rešitve za nekater
 Problem največje neodvisne množice v grafu $G=(V,E)$ lahko s celoštevilskim linearnim programiranjem modeliramo na sledeč način:
 $$max \sum_{v \in V} x_{v},$$
 da velja:
-$$ x_{u} + x_{v} \leq 1 \ za \ \forall uv \in E,$$
-$$ x_{u} \in \{0, 1 \}$$
-$$ x_{u} = 
+$$ x_{v} + x_{w} \leq 1 \ za \ \forall vw \in E,$$
+$$ x_{v} \in \{0, 1 \}$$
+$$ x_{v} = 
     \begin{cases}
-    1, \ za \ u \in H \\
-    0, \ za \ u \notin H
-    \end{cases}, \text{H neodvisna množica v grafu G.}
+    1, \ za \ u \in U \\
+    0, \ za \ u \notin U
+    \end{cases}, \text{U neodvisna množica v grafu G.}
 $$
 \end{posledica}
 
