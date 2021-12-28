@@ -1,1 +1,1 @@
-# Najvecje-neodvisne-mnozice-z-lokalnim-iskanjem
+# Maksimalne-neodvisne-mnozice-z-lokalnim-iskanjem
