@@ -274,3 +274,4 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+.ipynb_checkpoints/IndependentSets-checkpoint.ipynb
