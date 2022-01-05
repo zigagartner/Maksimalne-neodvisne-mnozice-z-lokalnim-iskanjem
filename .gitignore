@@ -1,4 +1,4 @@
-*.ipynb_checkpoints/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -277,3 +277,4 @@ TSWLatexianTemp*
 *.lpz
 .ipynb_checkpoints/IndependentSets-checkpoint.ipynb
 .ipynb_checkpoints/networkX_MIS-checkpoint.ipynb
+.ipynb_checkpoints/
