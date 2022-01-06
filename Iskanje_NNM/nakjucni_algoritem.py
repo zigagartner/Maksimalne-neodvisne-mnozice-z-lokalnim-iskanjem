@@ -1,13 +1,11 @@
 import networkx as nx
-import random
+import numpy as np
 
 def nakljucni_MIS(G):
     H = nx.convert_node_labels_to_integers(G)
     I = []
-    P = []
     V = list(H.nodes)
-    for i in V:
-        P.append(random.uniform(0, 1))
+    P = np.random.permutation(len(V))
     for i in V:
         A = []
         A.append(P[i])
