@@ -9,7 +9,7 @@ def tightness(graf, mnozica, v): #Dolocimo "tightness" vozlisca v, v mnozici X, 
             pass
     return t
 
-def lokalno_iskanje(G, I): 
+def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množica I (gre za Python list)
     V = list(G.nodes)
     for v in I:
         L = [] #Gradimo mnozice potencialnih kandidatov za dodajanje v neodvisno mnozico

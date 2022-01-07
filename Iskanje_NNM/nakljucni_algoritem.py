@@ -24,6 +24,14 @@ def nakljucni_MIS(G, P):
         G1.remove_nodes_from(V1)
         return list(I + nakljucni_MIS(G1, P)) #Algoritem ponovimo za nov graf G, ki je zmanjsan za mnozico V1
 
+
+
+
+
+
+
+
+
 G = nx.hypercube_graph(6)
 H = nx.convert_node_labels_to_integers(G)
 l = len(H.nodes)
