@@ -1,0 +1,149 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+
+\usepackage{amsthm}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{relsize}
+\usepackage{graphicx}
+\usepackage{etoolbox}
+\usepackage{setspace}
+\graphicspath{ {./Slike/} }
+\usepackage[
+top    = 3.cm,
+bottom = 3.cm,
+left   = 3.cm,
+right  = 3.cm]{geometry}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{authblk}
+\usepackage{makecell}
+\usepackage[nottoc]{tocbibind}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+
+\newtheorem{definicija}{Definicija}
+\newtheorem{posledica}{Posledica}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \textsc{\LARGE Univerza v Ljubljani}\\[0.5cm]
+        {\Large Fakulteta za matematiko in fiziko}\\[3cm]
+        {\large Finančni praktikum}\\[0.5cm]
+        {\huge Največje neodvisne množice z lokalnim iskanjem}\\[10.0cm]
+    \end{center}
+
+    \begin{minipage}{0.4\textwidth}
+		\begin{flushleft}
+			\large
+			\textit{Avtorja:}\\
+			Jaka Mrak \\
+			Žiga Gartner 
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright}
+			\large
+			\textit{Mentorja:}\\
+			prof. dr. Sergio \textsc{Cabello} \\
+			doc. dr. Janoš \textsc{Vidali}
+		\end{flushright}
+	\end{minipage}
+	
+	\vfill\vfill\vfill 
+	\begin{center}
+	{\large{Ljubljana, \today}} 
+    \end{center}
+	\vfill 
+
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{Navodilo}
+
+Naloga je iskanje največje neodvisne množice v grafu $G = (V,E)$ s pomočjo celoštevilskega linearnega programiranja. Velike neodvisne množice v grafu lahko poiščemo s pomočjo metode lokalnega iskanja.
+Začnemo s poljubno neodvisno množico $U  \subseteq V$, kjer $k$ vozlišč nadomestimo s $k + 1$ vozlišči tako, da ohranjamo neodvisnost množice $U$. Konstanta $k$ je dana na začetku. Primerjali bomo metodi
+lokalnega iskanja in optimalne rešitve ter primerjali njune rešitve za nekatere preproste grafe.
+
+\section{Opis problema}
+\begin{definicija}
+    Naj bo $G = (V,E)$ graf. \textbf{Neodvisna množica} $U$, v grafu $G$, je taka podmnožica množice vozlišč $V$, kjer poljubni dve vozlišči iz množice $U$ nista sosednji.
+    \textbf{Maksimalna neodvisna množica} v grafu $G$ pa je taka neodvisna množica, kjer ne obstaja vozlišče $v \in V$ in $v \notin U$, ki bi ga lahko dodali množici $U$ in pri tem ohranili neodvisnost množice $U$. Torej
+    je neodvisna množica $U$ največja taka, če velja ena od naslednjih dveh lastnosti:
+    \begin{enumerate}
+        \item $v \in U$
+        \item $S(v) \cap U \neq \emptyset,$ kjer je $S(v)$ množica sosedov $v$.
+    \end{enumerate}
+    \textbf{Največja neodvisna množica} je neodvisna množica, največje možne velikosti, za dan graf $G$. Velikosti največje neodvisne množice, za graf $G$, pa pravimo \textbf{neodvisnostno število} in 
+    pogosto označimo $\alpha(G)$.
+\end{definicija}
+
+\begin{definicija}
+    Celoštevilski linearni program v standardni obliki je dan z matriko $A \in \mathbb{R}^{m \times n}$, vektorjem $b \in \mathbb{R}^{m}$ in vektorjem $c \in \mathbb{R}^{n}$. Iščemo
+    $$max<c,x>,$$
+    da bodo zadoščeni pogoji
+    $$ Ax \leq b, x \geq 0,$$
+    kjer je $x \in \mathbb{Z}^{n}.$
+
+\end{definicija}
+
+\begin{posledica}
+Problem največje neodvisne množice v grafu $G=(V,E)$ lahko s celoštevilskim linearnim programiranjem modeliramo na sledeč način:
+$$max \sum_{v \in V} x_{v},$$
+da velja:
+$$ x_{v} + x_{w} \leq 1 \ za \ \forall vw \in E,$$
+$$ x_{v} \in \{0, 1 \}$$
+$$ x_{u} = 
+    \begin{cases}
+    1, \ za \ u \in U \\
+    0, \ za \ u \notin U
+    \end{cases}, \text{U neodvisna množica v grafu G.}
+$$
+\end{posledica}
+
+Največjo neodvisno množico v množici vseh neodvisnih podmnožic grafa $G = (V,E)$ bomo iskali s pomočjo celoštevilskega lineranega programiranja in lokalnega iskanja. \textbf{Lokalno iskanje} temelji na
+izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozlišč zamenjamo s $k + 1$ vozlišči in pri tem ohranjamo neodvisnost množice $U$.
+
+\newpage
+
+\section{Opis dela}
+
+\subsection{Generiranje podatkov}
+
+\subsection{Algoritmi}
+
+\begin{algorithm}
+    \caption{Naključni MIS}\label{euclid}
+    \begin{algorithmic}[1]
+    \State $\textit{I} \gets \emptyset$
+    \State $\forall v \in V\ \text{dobi vrednost}\ \textit{P}(v) \in \textit{permutacija}(V)$
+    \If {$\textit{P}(v) < \textit{P}(w)\ \textit{za}\ \forall w \in \textit{sosedi}(v) $}
+    \State $ I \gets I \cup v $
+    \EndIf
+    \State $V' \gets V \setminus (I \cup \textit{sosedi}(I))$.
+    \State $E' \gets E \setminus \textit{povezave}(I)$.
+    \State \textbf{goto} \emph{loop}.
+    \State \textbf{close};
+    \State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+    \State \textbf{goto} \emph{top}.
+    \end{algorithmic}
+    \end{algorithm}
+
+\subsection{Analiza rezultatov}
+
+\section{Sklep}
+
+\section{Viri}
+
+\end{document}
