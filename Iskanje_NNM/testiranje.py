@@ -1,5 +1,7 @@
 import networkx as nx
 import numpy as np
+import json
+from typing import Dict
 
 
 def nakljucni_MIS(G, P):
@@ -56,14 +58,46 @@ def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množic
         else:
             return I 
 
+
+
+def erdos_renyi(n,p,m,ime_datoteke_json):
+    db_json = {}
+    A = []
+    for i in range(m):
+        G = nx.erdos_renyi_graph(n,p)
+        G_slovar = nx.to_dict_of_lists(G)
+        A += [G_slovar]
+    with open(ime_datoteke_json +'.json','w') as js:
+        js.write(
+            '[' +
+            ',\n'.join(json.dumps(i) for i in A) +
+            ']\n')
+    return A
+
+
+
+
+
+
+#-----------------------------------------
+
+
+#A = []
+#for i in range(1000):
+#    P = list(np.random.permutation(len(H.nodes)))
+#    I = nakljucni_MIS(H, P)
+#    I_1 = lokalno_iskanje(H, I )
+#    A.append(len(I_1) - len(I))
+#print(A)
+#print(len(A))
+
+
 A = []
-for i in range(1000):
-    H = nx.convert_node_labels_to_integers(nx.erdos_renyi_graph(250, 0.1))
-    P = list(np.random.permutation(len(H.nodes)))
-    I = nakljucni_MIS(H, P)
-    I_1 = lokalno_iskanje(H, I )
+grafi=erdos_renyi(20,0.4,999,'erdos-renyi')
+for dict in grafi:
+    graf = nx.from_dict_of_lists(dict)
+    P = list(np.random.permutation(len(graf.nodes)))
+    I = nakljucni_MIS(graf, P)
+    I_1 = lokalno_iskanje(graf, I)
     A.append(len(I_1) - len(I))
 print(A)
-print(len(A))
-
-
