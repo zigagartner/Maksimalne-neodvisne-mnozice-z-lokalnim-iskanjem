@@ -4,36 +4,53 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json 
 
-
-
-#N je seznam različnih velikosti grafa
-#m je število grafov vsake vrste, ki jih bo generiralo
-def erdos_renyi_N(N,p,m,ime_datoteke_json):
-    db = {}
-    for n in N:
-        G = nx.erdos_renyi_graph(n,p)
-        G_slovar = nx.to_dict_of_lists(G)
-        db[n] = G_slovar        
-    zapisi_v_json(ime_datoteke_json,db)
-    return db
-
-#P je seznam različnih verjetnosti
-def erdos_renyi_P(n,P,m,ime_datoteke_json):
-    db = {}
-    for p in P:
-        G = nx.erdos_renyi_graph(n,p)
-        G_slovar = nx.to_dict_of_lists(G)
-        db[p] = G_slovar        
-    zapisi_v_json(ime_datoteke_json,db)
-    return db
-
-
-def zapisi_v_json(datoteka,db):
+def zapisi_v_json(datoteka,A):
     with open(datoteka +'.json','w') as js:
-        json.dump(db, js)
+        js.write(
+            '[' +
+            ',\n'.join(json.dumps(i) for i in A) +
+            ']\n')
+
+# Dano verjetnost in n
+def erdos_renyi(n,p,m,ime_datoteke_json):
+    A = []
+    for i in range(m):
+        G = nx.erdos_renyi_graph(n,p)
+        G_slovar = nx.to_dict_of_lists(G)
+        A += [G_slovar]
+    zapisi_v_json(ime_datoteke_json, A)
+    return A
 
 
-print(erdos_renyi_N([5,10],0.5,5,'erdos-grafi'))
+erdos_renyi(5,0.5,5,'test')
+
+# Razlicne n
+
+def erdos_renyi_N(N, p, ime_datoteke_json):
+    A = []
+    for i in N:
+        G = nx.erdos_renyi_graph(i,p)
+        G_slovar = nx.to_dict_of_lists(G)
+        A += [G_slovar]
+    zapisi_v_json(ime_datoteke_json, A)
+    return A
+
+
+#Razlicne p
+
+def erdos_renyi_P(n, P, ime_datoteke_json):
+    A = []
+    for i in P:
+        G = nx.erdos_renyi_graph(n,i)
+        G_slovar = nx.to_dict_of_lists(G)
+        A += [G_slovar]
+    zapisi_v_json(ime_datoteke_json, A)
+    return A
+
+
+
+
+
 
 
 #ne dela vredu ker na koncu ko spreminjam kljuce iz str v int zafrknem in dodam k vsakem klucu isti slovar (treba zanke prau nastavit s+ce bova rabla)   
