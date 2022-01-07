@@ -35,3 +35,6 @@ def lokalno_iskanje(G, I):
                     break
     return lokalno_iskanje(G, I_lokalno)
 
+
+
+
