@@ -14,26 +14,22 @@ def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množic
     for v in I:
         L = [] #Gradimo mnozice potencialnih kandidatov za dodajanje v neodvisno mnozico
         for w in G.neighbors(v):
-            if tightness(G, I, w) == 1:
-                L.append(w)
+            if G.neighbors(v) != []:
+                if tightness(G, I, w) == 1:
+                    L.append(w)
+                else:
+                    pass
             else:
                 pass
-        if len(L) < 2:
-            return I
-        elif L == []:
-            return I 
-        else:
+        if len(L) >= 2:
             for v1 in L:
                 for w1 in L:
                     if w1 not in G.neighbors(v1):
                         I.remove(v)
                         I_lokalno = I + [v1, w1]
-                        break
-                if w1 not in G.neighbors(v1):
-                    break
-        if w1 not in G.neighbors(v1):
-                    break
-    return lokalno_iskanje(G, I_lokalno)
+                        return lokalno_iskanje(G, I_lokalno)
+        else:
+            return I 
 
 
 
