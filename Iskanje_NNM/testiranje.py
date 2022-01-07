@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import json
 from typing import Dict
+import matplotlib.pyplot as plt
 
 
 def nakljucni_MIS(G, P):
@@ -101,3 +102,12 @@ for dict in grafi:
     I_1 = lokalno_iskanje(graf, I)
     A.append(len(I_1) - len(I))
 print(A)
+
+slovar_pojavitev = {}
+for i in range(max(A)):
+    slovar_pojavitev[i]=A.count(i)
+kljuc = slovar_pojavitev.keys()
+vrednost=slovar_pojavitev.values()
+
+plt.bar(kljuc, vrednost)
+plt.show()
