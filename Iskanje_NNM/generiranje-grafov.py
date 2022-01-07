@@ -11,14 +11,16 @@ def erdos_renyi(n,p,m,ime_datoteke_json):
     for i in range(m):
         G = nx.erdos_renyi_graph(n,p)
         G_slovar = nx.to_dict_of_lists(G)
-        db_json[i] = G_slovar
         A += [G_slovar]
     with open(ime_datoteke_json +'.json','w') as js:
-        json.dump(db_json,js)
+        js.write(
+            '[' +
+            ',\n'.join(json.dumps(i) for i in A) +
+            ']\n')
     return A
 
 
-
+erdos_renyi(5,0.5,5,'test')
 
 
 #ne dela vredu ker na koncu ko spreminjam kljuce iz str v int zafrknem in dodam k vsakem klucu isti slovar (treba zanke prau nastavit s+ce bova rabla)   
