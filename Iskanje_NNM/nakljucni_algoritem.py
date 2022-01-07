@@ -18,7 +18,7 @@ def nakljucni_MIS(G, P):
     for i in I:
         N += G.neighbors(i)         #seznam sosedov vseh vozlišč iz I
     V1 = I + N                      # V1 je mnozica, ki jo bomo odstranili iz grafa in je sestavljena iz vozlisc iz I, ter njihovih sosedov
-    #V1 = list(dict.fromkeys(V1))   to je nepotrebno ker je isto kot zgoraj
+    V1 = list(dict.fromkeys(V1))   
     if I == []:
         return []
     else:
