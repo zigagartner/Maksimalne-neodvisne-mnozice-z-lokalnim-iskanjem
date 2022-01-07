@@ -58,12 +58,11 @@ def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množic
 
 A = []
 for i in range(1000):
-    H = nx.convert_node_labels_to_integers(nx.erdos_renyi_graph(100, 0.005))
+    H = nx.convert_node_labels_to_integers(nx.erdos_renyi_graph(250, 0.1))
     P = list(np.random.permutation(len(H.nodes)))
     I = nakljucni_MIS(H, P)
     I_1 = lokalno_iskanje(H, I )
-    if len(I) + 1 < len(I_1):
-        A += [len(I_1)]
+    A.append(len(I_1) - len(I))
 print(A)
 print(len(A))
 
