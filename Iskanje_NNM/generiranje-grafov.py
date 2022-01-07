@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import json 
 
 
-def erdos_reyni(n,p,m,ime_datoteke_json):
+def erdos_renyi(n,p,m,ime_datoteke_json):
     db_json = {}
     A = []
     for i in range(m):
