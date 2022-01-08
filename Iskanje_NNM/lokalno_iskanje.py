@@ -28,6 +28,10 @@ def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množic
                         I.remove(v)
                         I_lokalno = I + [v1, w1]
                         return lokalno_iskanje(G, I_lokalno)
+                    else:
+                        pass
+            else:
+                return I
         else:
             return I 
 
