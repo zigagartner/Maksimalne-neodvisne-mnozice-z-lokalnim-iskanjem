@@ -118,13 +118,30 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \newpage
 
 \section{Opis dela}
+V nadaljevanju bomo največjo oz. maksimalno množico iskali s pomočjo $CLP$, v Sage, in s pomočjo implementiranega algoritma $nakljucni\_MIS(G)$ kasneje izboljšanega z lokalnim
+iskanjem. Algoritme bomo izvajali na grafih, generiranih s pomočjo $\text{Erdős-Rényijevega}\ G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
+časovno zahtevnost algoritmov, kasneje pa še, kako vpliva spreminjanje števila vozlišč in verjetnosti, v modelu, na velikost maksimalne (ali pa največje) neodvisne množice in 
+časovno zahtevnost algoritmov.
 
 \subsection{Generiranje podatkov}
+Kot omenjeno, bomo grafe generirali s pomočjo $\text{Erdős-Rényijevega}\ G(n,p)$ modela.
+
+\begin{definicija}
+    $\text{Erdős-Rényijev}$ model $G(n, p)$ generira graf z $n$ naključno povezanimi vozlišči. Vsaka povezava je v graf vključena neodvisno, z verjetnostjo $p$.
+\end{definicija}
+
+Generirali bomo grafe s konstantima $(n,p)$, z naraščajočim $n$ in konstantnim $p$ ter s konstantim $n$ in naraščajočim $p$. Za generacijo podatkov v Pythonu bomo uporabili
+knjižnico $NetworkX$, nato pa objekte grafov, s funkcijo $nx.to\_dict\_of\_lists(graf)$, kjer je $nx$ okrajšava za $NetworkX$, pretvorili še v slovarje list, da bomo lahko grafe uporabljali še v okolju $Sage$.
+Grafe, na katerih bomo izvajali algoritme, bomo shranili še v $JSON$ datoteke.
+
 
 \subsection{Algoritmi}
 
+Za iskanje maksimalne neodvisne množice smo implementirali algoritem $nakljucni\_MIS(G)$, čigar rešitev bomo poizkušali izboljšati še z algoritmom $lokalno\_iskanje(G, I)$. Oba
+algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I)$ pa še neko maksimalno neodvisno množico $I$, grafa $G$.
+
 \begin{algorithm}
-\caption{Naključni MIS(G)}\label{euclid}
+\caption{$nakljucni\_MIS(G)$}\label{euclid}
 \begin{algorithmic}[1]
 \State $\textit{I} \gets \emptyset$
 \State $\forall v \in V\ \text{dobi vrednost}\ \textit{P}(v) \in \textit{permutacija}(V)$
@@ -138,7 +155,7 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \end{algorithm}
 
 \begin{algorithm}
-    \caption{Lokalno iskanje(G)}\label{euclid}
+    \caption{$lokalno\_iskanje(G, I)$}\label{euclid}
     \begin{algorithmic}[1]
     \State $\textit{I} \gets \emptyset$
     \State $\forall v \in V\ \text{dobi vrednost}\ \textit{P}(v) \in \textit{permutacija}(V)$
@@ -155,6 +172,26 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 
 \section{Sklep}
 
-\section{Viri}
+\newpage
+
+\begin{thebibliography}{9}    
+
+    \bibitem{Mil} 
+    Gary Miller.
+    \textit{Lecture 32: Luby’s Algorithm for Maximal Independent Set}, dostopno na \url{http://www.cs.cmu.edu/afs/cs/academic/class/15750-s18/ScribeNotes/lecture32.pdf}.
+    \bibitem{And, Res} 
+
+    Diogo Andrade, Mauricio G. C. Resende.
+    \textit{Fast Local Search for the Maximum Independent Set Problem.} Conference Paper in Journal of Heuristics, May 2008, 
+    dostopno na \url{https://www.researchgate.net/publication/221131653_Fast_Local_Search_for_the_Maximum_Independent_Set_Problem}.
+
+    \bibitem{Wiki} 
+    \textit{Maximal independent set}, v: Wikipedia: The Free Encyclopedia,[ogled 6.~1.~2022], dostopno na \url{https://en.wikipedia.org/wiki/Maximal_independent_set}.
+
+    \bibitem{Wiki} 
+    \textit{Independent set (graph theory)}, v: Wikipedia: The Free Encyclopedia,[ogled 6.~1.~2022], dostopno na \url{https://en.wikipedia.org/wiki/Independent_set_(graph_theory)}.
+
+    
+\end{thebibliography}
 
 \end{document}
