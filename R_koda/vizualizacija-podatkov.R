@@ -86,7 +86,7 @@ podatki.ponovitve <- podatki.ponovitve[, c(7,1,2,3,4,5,6)]
 podatki.ponovitve <- podatki.ponovitve %>%
   mutate(casilokalno = podatki.ponovitve$`Casi nakljucno`+podatki.ponovitve$`Casi lokalno`) %>%
   select(-"Casi lokalno")
-  
+
 #preimenujemo stolpce
 imena.stolpcev.ponovitve <- c("ponovitev", "nakljucno", "casinakljucno","CLP", "casiCLP", "lokalno","casilokalno")
 colnames(podatki.ponovitve) <- imena.stolpcev.ponovitve
@@ -132,7 +132,7 @@ graf_ver_moc <- podatki.ver %>% ggplot(aes(x=verjetnost,y=MočMnožice,col=Algor
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
                                 "nakljucno"="Naključni"))
- 
+
 ggsave("ver-moc.png", plot = graf_ver_moc)
 
 #prikaze vse case na enem grafu da primerjamo kako naraščajo
@@ -191,9 +191,9 @@ graf_voz_casi <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=Čas,col=Algoritem
   scale_y_continuous(name = "Čas izvajanja [s]", breaks = seq(0,max(podatki.vozlisca$Čas),0.025))+
   scale_x_continuous(name = "Število vozlišč", breaks = seq(0,600,50))+
   scale_color_discrete(name="Tip algoritma",
-                         labels=c("CLP"="CLP",
-                                  "lokalno"="Lokalno iskanje",
-                                  "nakljucno"="Naključni"))
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))
 
 ggsave("voz-cas.png", plot = graf_voz_casi)
 ##PONOVITVE ISTEGA GRAFA
@@ -215,7 +215,7 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8)) 
-  
+
 ggsave("pon-moc.png", plot = graf_pon_moc)
 
 #povprečna moč maksimalne neodvisne množice po algoritmih
@@ -269,7 +269,7 @@ graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje, 
 
 ggsave("pon-povpmoc.png", plot = graf_pon_povp)
 
-  
+
 #porazdelitev napak med clp in lokalnim
 
 podatki.porazdelitev.napak <- read_csv('graf_razlik.csv') %>% select(-1)
@@ -283,7 +283,7 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
                                 "lokalno"="Lokalno iskanje",
                                 "nakljucno"="Naključni"))+
   theme(axis.title.x = element_text(margin = margin(t = 20)),
-    legend.title = element_text(color = "Black", size = 10),
+        legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
