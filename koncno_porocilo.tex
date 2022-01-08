@@ -124,7 +124,7 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \subsection{Algoritmi}
 
 \begin{algorithm}
-\caption{Naključni MIS}\label{euclid}
+\caption{Naključni MIS(G)}\label{euclid}
 \begin{algorithmic}[1]
 \State $\textit{I} \gets \emptyset$
 \State $\forall v \in V\ \text{dobi vrednost}\ \textit{P}(v) \in \textit{permutacija}(V)$
@@ -136,6 +136,20 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \State $\text{return}\  I \cup \textit{MIS}(G'=(V', E'))$
 \end{algorithmic}
 \end{algorithm}
+
+\begin{algorithm}
+    \caption{Lokalno iskanje(G)}\label{euclid}
+    \begin{algorithmic}[1]
+    \State $\textit{I} \gets \emptyset$
+    \State $\forall v \in V\ \text{dobi vrednost}\ \textit{P}(v) \in \textit{permutacija}(V)$
+    \If {$\textit{P}(v) < \textit{P}(w)\ \textit{za}\ \forall w \in \textit{sosedi}(v) $}
+    \State $ I \gets I \cup v $
+    \EndIf
+    \State $V' \gets V \setminus (I \cup \textit{sosedi}(I))$.
+    \State $E' \gets E \setminus \textit{povezave}(I)$.
+    \State $\text{return}\  I \cup \textit{MIS}(G'=(V', E'))$
+    \end{algorithmic}
+    \end{algorithm}
 
 \subsection{Analiza rezultatov}
 
