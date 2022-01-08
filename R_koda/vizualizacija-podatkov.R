@@ -10,6 +10,7 @@ library(readxl)
 library(dplyr)
 library(readr)
 library(shinythemes)
+library(latex2exp)
 
 #UVOZ
 ##VERJETNOST
@@ -113,69 +114,161 @@ podatki.pon <- left_join(tabela.casi.ponovitve,tabela.moc.ponovitve,by=c("ponovi
 
 #VIZUALIZACIJA
 
-
 ##VERJETNOST
 #prikaže vse algoritme na enem grafu LINIJSKO
 graf_ver_moc <- podatki.ver %>% ggplot(aes(x=verjetnost,y=MočMnožice,col=Algoritem))+
   geom_line()+
-  theme_classic()
-
+  labs(title="Vpliv verjetnosti na moč maksimalne neodvisne množice")+
+  scale_x_continuous(name = "Verjetnost", breaks = seq(0.1,0.9,0.1),expand = c(0,0))+
+  scale_y_continuous(name = "Moč množice", breaks = seq(0,max(podatki.ver$MočMnožice),2))+
+  theme_classic()+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.8))+ 
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))
+ 
+ggsave("ver-moc.png", plot = graf_ver_moc)
 
 #prikaze vse case na enem grafu da primerjamo kako naraščajo
 graf_ver_casi <- podatki.ver %>% ggplot(aes(x=verjetnost,y=Čas,col=Algoritem))+
   geom_line()+
-  theme_classic()
-
-
-#prikaze moč množice za posamezne vrste algoritma s stolpici
-
-grafi_ver_moc_posamezno <- podatki.ver %>% ggplot(aes(x=verjetnost,y=MočMnožice))+
-  geom_col()+
-  facet_grid(. ~ Algoritem) +
-  theme_bw()
-
+  ggtitle("Vpliv verjetnosti na čas izvajanja algoritma")+
+  ylab("Čas [s]")+
+  scale_x_continuous(name = "Verjetnost", breaks = seq(0.1,0.9,0.1), expand = c(0,0))+
+  theme_classic()+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.5))+ 
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))
+ggsave("ver-cas.png", plot = graf_ver_casi)
 
 ##ŠTEVILO VOZLIŠČ
 
 #na enem grafu primerjava vpliva stevila vozlisc na moc mnozice posameznega algoritma
 graf_voz_moc <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=MočMnožice,col=Algoritem))+
   geom_line()+
-  theme_classic()
+  theme_classic()+
+  ggtitle("Vpliv števila vozlišč na moč maksimalne nedovsine množice")+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.2, 0.8))+ 
+  scale_y_continuous(name = "Moč množice", breaks = seq(0,max(podatki.vozlisca$MočMnožice),50))+
+  scale_x_continuous(name = "Število vozlišč", breaks = seq(0,600,50))+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))
+
+ggsave("voz-moc.png", plot = graf_voz_moc)
+
 
 #primerjava vpliva st vozlisc na cas izvedbe algoritma
 graf_voz_casi <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=Čas,col=Algoritem))+
   geom_line()+
-  theme_classic()
-graf_voz_casi
+  ggtitle("Vpliv števila vozlišč na čas izvajanja algoritma")+
+  theme_classic()+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.2, 0.8))+ 
+  scale_y_continuous(name = "Čas izvajanja [s]", breaks = seq(0,max(podatki.vozlisca$Čas),0.025))+
+  scale_x_continuous(name = "Število vozlišč", breaks = seq(0,600,50))+
+  scale_color_discrete(name="Tip algoritma",
+                         labels=c("CLP"="CLP",
+                                  "lokalno"="Lokalno iskanje",
+                                  "nakljucno"="Naključni"))
 
-grafi_voz_moc_posamezno <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=MočMnožice))+
-  geom_col()+
-  facet_grid(. ~ Algoritem) +
-  theme_bw()
-grafi_voz_moc_posamezno
-
-
+ggsave("voz-cas.png", plot = graf_voz_casi)
 ##PONOVITVE ISTEGA GRAFA
 
 #primerjava nihanja moči maksimalne neodvisne množice po algoritmih
-graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice))+
-  geom_col()+
-  facet_grid(.~ Algoritem)+
-  theme_classic()
+graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
+  geom_line(size=.75)+
+  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,25)) +
+  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0))+
+  theme_classic()+
+  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.8)) 
+  
+ggsave("pon-moc.png", plot = graf_pon_moc)
 
 #povprečna moč maksimalne neodvisne množice po algoritmih
 
-podatki.pon.povprecje <- podatki.pon %>%group_by(Algoritem) %>%
-  summarise(povprecje = mean(MočMnožice))
-graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje))+
-  geom_col()
 
-#maksimalna moč maks neodv množice po algo
+podatki.ponovitve1 <- read_csv("grafi1000.csv") %>% as.data.frame() %>% select(-1) %>%
+  mutate(ponovitev=seq(100))
+podatki.ponovitve1 <- podatki.ponovitve1[, c(7,1,2,3,4,5,6)] 
+podatki.ponovitve1 <- podatki.ponovitve1 %>%
+  mutate(casilokalno = podatki.ponovitve1$`Casi nakljucno`+podatki.ponovitve1$`Casi lokalno`) %>%
+  select(-"Casi lokalno")
 
-podatki.pon.max <- podatki.pon %>%group_by(Algoritem) %>%
-  summarise(max= max(MočMnožice))
-graf_pon_max <- podatki.pon.max %>% ggplot(aes(x=Algoritem, y=max))+
-  geom_col()
+
+
+#preimenujemo stolpce
+imena.stolpcev.ponovitve1 <- c("ponovitev", "Naključno", "casinakljucno","CLP", "casiCLP", "Lokalno","casilokalno")
+colnames(podatki.ponovitve1) <- imena.stolpcev.ponovitve1
+
+#tabela s casi
+
+tabela.casi.ponovitve1 <- podatki.ponovitve1 %>% select(c(-2,-4,-6)) %>%
+  rename(
+    Naključno=casinakljucno,
+    CLP=casiCLP,
+    Lokalno=casilokalno
+  ) %>%
+  gather(Algoritem, Čas, Naključno,CLP,Lokalno)
+
+#tabela moč množice
+
+tabela.moc.ponovitve1 <- podatki.ponovitve1 %>% select(c(-3,-5,-7)) %>%
+  gather(Algoritem, MočMnožice, Naključno,CLP,Lokalno)
+
+
+#sedaj ko smo raztegnili tabeli damo nazaj v eno
+
+podatki.pon1 <- left_join(tabela.casi.ponovitve1,tabela.moc.ponovitve1,by=c("ponovitev","Algoritem"))
+
+
+podatki.pon.povprecje <- podatki.pon1 %>%group_by(Algoritem) %>%
+  summarise(povprecje = mean(MočMnožice)) 
+
+
+
+graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje, fill=Algoritem))+
+  ylab("Povprečna moč množice")+
+  ggtitle("Primerjava povprečnih moči maksimalne neodvisne množice po algoritmih")+
+  geom_bar(stat="identity", alpha=0.9,width = 0.6)+
+  scale_fill_grey(guide="none")+
+  theme_classic()
+
+ggsave("pon-povpmoc.png", plot = graf_pon_povp)
+
   
 #porazdelitev napak med clp in lokalnim
 
@@ -183,5 +276,20 @@ podatki.porazdelitev.napak <- read_csv('graf_razlik.csv') %>% select(-1)
 
 graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y=pojavitev))+
   geom_col() +
-  theme_classic()
+  ggtitle("Primerjava rešitev CLP in lokalnega iskanja")+
+  theme_classic()+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))+
+  theme(axis.title.x = element_text(margin = margin(t = 20)),
+    legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.8))+
+  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(0,max(podatki.porazdelitev.napak$razlika),1))
 graf_porazdelitve_napak
+
+ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
