@@ -3,6 +3,7 @@ import numpy as np
 import json
 from typing import Dict
 import matplotlib.pyplot as plt
+from collections import Counter
 
 
 def nakljucni_MIS(G, P):
@@ -59,20 +60,44 @@ def lokalno_iskanje(G, I): #Parametra graf v networkx formatu, neodvisna množic
         else:
             return I 
 
+def lokalno_iskanje1(G, I): #Parametra graf v networkx formatu, neodvisna množica I (gre za Python list)
+    V = list(G.nodes)
+    for v in I:
+        L = [] #Gradimo mnozice potencialnih kandidatov za dodajanje v neodvisno mnozico
+        for w in G.neighbors(v):
+            if G.neighbors(v) != []:
+                if tightness(G, I, w) == 1:
+                    L.append(w)
+                else:
+                    pass
+            else:
+                pass
+        while len(L) >= 2:
+            for v1 in L:
+                L.remove(v1)
+                for w1 in L:
+                    if w1 not in G.neighbors(v1):
+                        I.remove(v)
+                        I = I + [v1, w1]
+                        break
+                    elif w1 in G.neighbors(v1):
+                        pass
+                if w1 not in G.neighbors(v1):
+                    break
+            if w1 not in G.neighbors(v1):
+                break
+    return I
+        
+                    
+                        
 
 
-def erdos_renyi(n,p,m,ime_datoteke_json):
-    db_json = {}
+def erdos_renyi(n,p,m):
     A = []
     for i in range(m):
         G = nx.erdos_renyi_graph(n,p)
         G_slovar = nx.to_dict_of_lists(G)
         A += [G_slovar]
-    with open(ime_datoteke_json +'.json','w') as js:
-        js.write(
-            '[' +
-            ',\n'.join(json.dumps(i) for i in A) +
-            ']\n')
     return A
 
 
@@ -94,20 +119,22 @@ def erdos_renyi(n,p,m,ime_datoteke_json):
 
 
 A = []
-grafi=erdos_renyi(20,0.4,999,'erdos-renyi')
+B = []
+C = []
+D = []
+grafi=erdos_renyi(50,0.3,100)
 for dict in grafi:
     graf = nx.from_dict_of_lists(dict)
     P = list(np.random.permutation(len(graf.nodes)))
     I = nakljucni_MIS(graf, P)
     I_1 = lokalno_iskanje(graf, I)
+    I_2 = lokalno_iskanje1(graf, I)
     A.append(len(I_1) - len(I))
-print(A)
+    B.append(len(I_2) - len(I))
+    C.append(I_2)
+    D.append(I_1)
 
-slovar_pojavitev = {}
-for i in range(max(A)):
-    slovar_pojavitev[i]=A.count(i)
-kljuc = slovar_pojavitev.keys()
-vrednost=slovar_pojavitev.values()
+print(B)
 
-plt.bar(kljuc, vrednost)
-plt.show()
+for i in C:    
+    print(Counter(i))
