@@ -81,7 +81,7 @@ podatki.vozlisca <- left_join(tabela.casi.voz,tabela.moc.voz,by=c("vozlisca","Al
 ##ISTA VER IN ŠT VOZ VEČKRAT GENERIRAN
 
 podatki.ponovitve <- read_csv("grafi1000.csv") %>% as.data.frame() %>% select(-1) %>%
-  mutate(ponovitev=seq(100))
+  mutate(ponovitev=seq(1000))
 podatki.ponovitve <- podatki.ponovitve[, c(7,1,2,3,4,5,6)] 
 podatki.ponovitve <- podatki.ponovitve %>%
   mutate(casilokalno = podatki.ponovitve$`Casi nakljucno`+podatki.ponovitve$`Casi lokalno`) %>%
@@ -222,7 +222,7 @@ ggsave("pon-moc.png", plot = graf_pon_moc)
 
 
 podatki.ponovitve1 <- read_csv("grafi1000.csv") %>% as.data.frame() %>% select(-1) %>%
-  mutate(ponovitev=seq(100))
+  mutate(ponovitev=seq(1000))
 podatki.ponovitve1 <- podatki.ponovitve1[, c(7,1,2,3,4,5,6)] 
 podatki.ponovitve1 <- podatki.ponovitve1 %>%
   mutate(casilokalno = podatki.ponovitve1$`Casi nakljucno`+podatki.ponovitve1$`Casi lokalno`) %>%
@@ -290,6 +290,6 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
   scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(0,max(podatki.porazdelitev.napak$razlika),1))
-graf_porazdelitve_napak
+
 
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
