@@ -236,7 +236,7 @@ graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
                                          colour ="black"),
         legend.position = c(0.8, 0.8)) 
 
-graf_pon_casi
+
 
 ggsave("pon-casi.png",plot = graf_pon_casi)
 
