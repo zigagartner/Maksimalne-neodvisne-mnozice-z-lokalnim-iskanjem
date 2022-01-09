@@ -168,11 +168,11 @@ graf_ver_moc <- podatki.ver %>% ggplot(aes(x=verjetnost,y=MočMnožice,col=Algor
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+ 
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))
 
 ggsave("ver-moc.png", plot = graf_ver_moc)
 
@@ -189,11 +189,12 @@ graf_ver_casi <- podatki.ver %>% ggplot(aes(x=verjetnost,y=Čas,col=Algoritem))+
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.5))+ 
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))
+
 ggsave("ver-cas.png", plot = graf_ver_casi)
 
 ##ŠTEVILO VOZLIŠČ
@@ -211,11 +212,12 @@ graf_voz_moc <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=MočMnožice,col=Al
         legend.position = c(0.2, 0.8))+ 
   scale_y_continuous(name = "Moč množice", breaks = seq(0,max(podatki.vozlisca$MočMnožice),50))+
   scale_x_continuous(name = "Število vozlišč", breaks = seq(0,600,50))+
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))
+
 
 ggsave("voz-moc.png", plot = graf_voz_moc)
 
@@ -233,11 +235,12 @@ graf_voz_casi <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=Čas,col=Algoritem
         legend.position = c(0.2, 0.8))+ 
   scale_y_continuous(name = "Čas izvajanja [s]", breaks = seq(0,max(podatki.vozlisca$Čas),0.025))+
   scale_x_continuous(name = "Število vozlišč", breaks = seq(0,600,50))+
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))
+
 
 ggsave("voz-cas.png", plot = graf_voz_casi)
 ##PONOVITVE ISTEGA GRAFA
@@ -249,18 +252,17 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8)) +
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
-
+        legend.position = c(0.8, 0.8)) 
 ggsave("pon-moc.png", plot = graf_pon_moc)
 
 
@@ -271,17 +273,18 @@ graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$"))+
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+        legend.position = c(0.8, 0.8))
+  
 
 
 
@@ -348,10 +351,11 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
   ggtitle("Odstopanje rešitve lokalnega iskanja od CLP")+
   ylab("Število pojavitev")+
   theme_classic()+
-  scale_color_discrete(name="Tip algoritma",
-                       labels=c("CLP"="CLP",
-                                "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
+                     name="Tip algoritma",
+                     labels=c("CLP"="CLP",
+                              "lokalno"="Lokalno iskanje",
+                              "nakljucno"="Naključni"))+
   theme(axis.title.x = element_text(margin = margin(t = 5)),
         legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
@@ -359,8 +363,7 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
-  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
+  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))
 
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
 
@@ -373,19 +376,20 @@ graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
-  scale_color_discrete(name="Tip algoritma",
+  scale_color_manual(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "najboljsinakljucno"="Naključni najboljša",
                                 "najboljsilokalnoiskanje"="Lokalno najboljša",
-                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"))+
+                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"),
+                       values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.2)) +
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))
-ggsave("pon-moc-maxi.png", plot = graf_pon_moc_maxi)
+        legend.position = c(0.8, 0.2)) 
+
+ggsave("pon-moc-maximalno.png", plot = graf_pon_moc_maxi)
 
 
 #primerjava časov za maxi
@@ -396,19 +400,18 @@ graf_pon_casi_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=Čas,col=Alg
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
-  scale_color_discrete(name="Tip algoritma",
+  scale_color_manual(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "najboljsinakljucno"="Naključni najboljša",
                                 "najboljsilokalnoiskanje"="Lokalno najboljša",
-                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"))+
+                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"),
+                     values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8)) +
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))
-
+        legend.position = c(0.8, 0.8)) 
 ggsave("pon-casi-maxi.png", plot = graf_pon_casi_maxi)
 
 #povprečna moč maksimalne neodvisne množice po algoritmih maxi
