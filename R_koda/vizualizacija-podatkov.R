@@ -112,6 +112,46 @@ tabela.moc.ponovitve <- podatki.ponovitve %>% select(c(-3,-5,-7)) %>%
 podatki.pon <- left_join(tabela.casi.ponovitve,tabela.moc.ponovitve,by=c("ponovitev","Algoritem"))
 
 
+#----------------PRIMERJAVA ZA MAXI
+
+podatki.ponovitve.maxi <- read_csv("grafi1000_maxi.csv") %>% as.data.frame() %>% select(-1) %>%
+  mutate(ponovitev=seq(500))
+
+podatki.ponovitve.maxi <- podatki.ponovitve.maxi[, c(9,1,2,3,4,5,6,7,8)] 
+podatki.ponovitve.maxi <- podatki.ponovitve.maxi %>%
+  mutate(casinajboljsilokalno = podatki.ponovitve.maxi$`Casi najboljsi nakljucno`+podatki.ponovitve.maxi$`Casi najboljsi lokalno iskanje`) %>%
+  select(-"Casi najboljsi lokalno iskanje")
+
+#preimenujemo stolpce
+imena.stolpcev.ponovitve.maxi <- c("ponovitev", "najboljsinakljucno", "casinajboljsinakljucno",
+                              "CLP", "casiCLP", "najboljsilokalnoiskanje","nakljucnilokalnoiskanje",
+                              "casinakljucnilokalnoiskanje", "casinajboljsilokalno")
+colnames(podatki.ponovitve.maxi) <- imena.stolpcev.ponovitve.maxi
+
+#tabela s casi
+
+tabela.casi.ponovitve.maxi <- podatki.ponovitve.maxi %>% select(c(-2,-4,-6,-7)) %>%
+  rename(
+    najboljsinakljucno=casinajboljsinakljucno,
+    CLP=casiCLP,
+    najboljsilokalnoiskanje=casinajboljsilokalno,
+    nakljucnilokalnoiskanje=casinakljucnilokalnoiskanje
+  ) %>%
+  gather(Algoritem, Čas, najboljsinakljucno,CLP,najboljsilokalnoiskanje,nakljucnilokalnoiskanje)
+
+#tabela moč množice
+
+tabela.moc.ponovitve.maxi <- podatki.ponovitve.maxi %>% select(c(-3,-5,-8,-9)) %>%
+  gather(Algoritem, MočMnožice, najboljsinakljucno,CLP,najboljsilokalnoiskanje,nakljucnilokalnoiskanje)
+
+
+#sedaj ko smo raztegnili tabeli damo nazaj v eno
+
+podatki.pon.maxi <- left_join(tabela.casi.ponovitve.maxi,tabela.moc.ponovitve.maxi,by=c("ponovitev","Algoritem"))
+
+
+
+
 #VIZUALIZACIJA
 
 ##VERJETNOST
@@ -219,12 +259,13 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
 ggsave("pon-moc.png", plot = graf_pon_moc)
 
 
+#primerjava časov algoritmov
 graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
   geom_line(size=.5)+
   scale_y_continuous(name = "Čas izvajanja [s]",expand = c(0, 0)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
-  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
+  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$"))+
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
@@ -288,7 +329,7 @@ graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje, 
   geom_bar(stat="identity", alpha=0.9,width = 0.6)+
   scale_fill_grey(guide="none")+
   theme_classic()
-
+graf_pon_povp
 ggsave("pon-povpmoc.png", plot = graf_pon_povp)
 
 
@@ -312,6 +353,55 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
-  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(0,max(podatki.porazdelitev.napak$razlika),1))
-
+  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))
+graf_porazdelitve_napak
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
+
+## MAXI
+#primerjava moči množic za maxi
+
+graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
+  geom_line(size=.5)+
+  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
+  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
+  theme_classic()+
+  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "najboljsinakljucno"="Naključni najboljša",
+                                "najboljsilokalnoiskanje"="Lokalno najboljša",
+                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"))+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.2)) 
+graf_pon_moc_maxi
+ggsave("pon-moc-maxi.png", plot = graf_pon_moc_maxi)
+
+
+#primerjava časov za maxi
+
+graf_pon_casi_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
+  geom_line(size=.5)+
+  scale_y_continuous(name = "Čas izvajanja [s]",expand = c(0, 0)) +
+  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
+  theme_classic()+
+  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "najboljsinakljucno"="Naključni najboljša",
+                                "najboljsilokalnoiskanje"="Lokalno najboljša",
+                                "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"))+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.8)) 
+graf_pon_casi_maxi
+ggsave("pon-casi-maxi.png", plot = graf_pon_casi_maxi)
+
+
+
