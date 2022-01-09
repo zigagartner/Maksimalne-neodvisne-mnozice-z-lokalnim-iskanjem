@@ -221,7 +221,7 @@ ggsave("pon-moc.png", plot = graf_pon_moc)
 
 graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
   geom_line(size=.5)+
-  scale_y_continuous(name = "Moč množice",expand = c(0, 0)) +
+  scale_y_continuous(name = "Čas izvajanja [s]",expand = c(0, 0)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
