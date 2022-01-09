@@ -129,7 +129,8 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 
 \section{Opis dela}
 V nadaljevanju bomo največjo/maksimalne neodvisne množice iskali s pomočjo $CLP$ v Sage in s pomočjo implementiranega algoritma $nakljucni\_MIS(G)$,  kasneje izboljšanega z lokalnim
-iskanjem. Algoritme bomo izvajali na grafih, generiranih s pomočjo $\text{Erdős-Rényijevega}\ G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
+iskanjem. Algoritme bomo izvajali na grafih, generiranih s pomočjo \\
+$\text{Erdős-Rényijevega}\ G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
 časovno zahtevnost algoritmov, kasneje pa še, kako vpliva spreminjanje števila vozlišč in verjetnosti, v modelu, na velikost maksimalne (ali pa največje) neodvisne množice in na
 časovno zahtevnost algoritmov.
 
@@ -173,7 +174,7 @@ algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I
 Najprej definirajmo $\tau(v)$, v algoritmu imenovan $tightness(v)$.
 \begin{definicija}
 	Naj bo $G=(V,E)$ in $v \in S \subset G$. Potem je:
-	$$\tau(v) = |W|, \ kjer \ je \ W = \{w|w \in (sosedi(v) \cap V \setminus S)\}$$.
+	$$\tau(v) = |W|, \ kjer \ je \ W = \{w|w \in (sosedi(v) \cap V \setminus S)\}.$$
 \end{definicija}
 
 \noindent Algoritem $lokalno\_iskanje(G, I)$ sprejme graf $G$ in neko maksimalno neodvisno množico v grafu $G$. Nato vsakemu vozliscu $v \in I$
