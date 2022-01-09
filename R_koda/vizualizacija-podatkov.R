@@ -171,7 +171,8 @@ graf_ver_moc <- podatki.ver %>% ggplot(aes(x=verjetnost,y=MočMnožice,col=Algor
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))
+                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 ggsave("ver-moc.png", plot = graf_ver_moc)
 
@@ -191,7 +192,8 @@ graf_ver_casi <- podatki.ver %>% ggplot(aes(x=verjetnost,y=Čas,col=Algoritem))+
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))
+                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 ggsave("ver-cas.png", plot = graf_ver_casi)
 
 ##ŠTEVILO VOZLIŠČ
@@ -212,7 +214,8 @@ graf_voz_moc <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=MočMnožice,col=Al
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))
+                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 ggsave("voz-moc.png", plot = graf_voz_moc)
 
@@ -233,7 +236,8 @@ graf_voz_casi <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=Čas,col=Algoritem
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
-                                "nakljucno"="Naključni"))
+                                "nakljucno"="Naključni"))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 ggsave("voz-cas.png", plot = graf_voz_casi)
 ##PONOVITVE ISTEGA GRAFA
@@ -241,7 +245,7 @@ ggsave("voz-cas.png", plot = graf_voz_casi)
 #primerjava nihanja moči maksimalne neodvisne množice po algoritmih
 graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
   geom_line(size=.5)+
-  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,25,1)) +
+  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
@@ -254,7 +258,8 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8)) 
+        legend.position = c(0.8, 0.8)) +
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 ggsave("pon-moc.png", plot = graf_pon_moc)
 
@@ -275,7 +280,8 @@ graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8)) 
+        legend.position = c(0.8, 0.8))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 
 
@@ -353,7 +359,8 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
-  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))
+  scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))+
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"))
 
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
 
@@ -361,7 +368,7 @@ ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
 #primerjava moči množic za maxi
 
 graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
-  geom_line(size=.5)+
+  geom_line(size=.5,alpha=.85)+
   scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
@@ -376,8 +383,8 @@ graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.2)) 
-
+        legend.position = c(0.8, 0.2)) +
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))
 ggsave("pon-moc-maxi.png", plot = graf_pon_moc_maxi)
 
 
@@ -399,7 +406,8 @@ graf_pon_casi_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=Čas,col=Alg
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.8)) 
+        legend.position = c(0.8, 0.8)) +
+  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))
 
 ggsave("pon-casi-maxi.png", plot = graf_pon_casi_maxi)
 
