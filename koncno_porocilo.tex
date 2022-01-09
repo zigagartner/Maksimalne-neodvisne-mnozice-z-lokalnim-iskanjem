@@ -21,6 +21,13 @@ right  = 3.cm]{geometry}
 \usepackage[nottoc]{tocbibind}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\floatname{algorithm}{Algoritem}
+\renewcommand{\listalgorithmname}{Kazalo algoritmov}
+\algnewcommand\algorithmicto{\textbf{to}}
+\algnewcommand\algorithmicin{\textbf{in}}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algrenewtext{For}[3]{\algorithmicfor\ #1 $\gets$ #2\ \algorithmicto\ #3\ \algorithmicdo}
+\algdef{S}[FOR]{ForEach}[2]{\algorithmicforeach\ #1\ \algorithmicin\ #2\ \algorithmicdo}
 
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
@@ -154,6 +161,8 @@ algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I
 \end{algorithmic}
 \end{algorithm}
 
+\newpage
+
 \begin{algorithm}
     \caption{$lokalno\_iskanje(G, I)$}\label{euclid}
     \begin{algorithmic}[1]
@@ -170,19 +179,41 @@ algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I
 
 \subsection{Analiza rezultatov}
 
+\subsubsection{Analiza algoritmov na grafih $G(50, 0.3)$}
+
+Najprej bomo primerjali algoritme na $\text{Erdős-Rényijevih}\ G(50, 0.3)$. Na tak način sva generirala 500 grafo in na njih izvedla algoritma $CLP(G)$, $nakljucni\_MIS(G)$, za vsak graf pa sva slednjega poskušala izboljšati
+še z algoritmom $lokalno\_iskanje(G, I)$, ki poleg grafa $G$ sprejme še $I = nakljucni\_MIS(G)$.
+
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[width=\textwidth]{R_koda/pon-moc.png}
-		\caption{Časovnica SPACa.}
+		\includegraphics[scale=0.12]{R_koda/pon-moc.png}
+		\caption{Moči neodvisnih množic za grafe $G(50,0.3)$}
 	\end{center}
 \end{figure}
-\vspace{0.5cm}
+Opazimo, da neodvisne množice največjih moči najde $CLP$. Kljub temu so na grafu opazni osamelci, ko $lokalno\_iskanje(G, I)$ vrne neodvisne množice izstopajočih moči. Teh pojavov si ne znava najbolje razložiti. Bodisi $CLP$ nikoli
+ne vrne največje neodvisne množice, neodvisna množica $I = nakljucni\_MIS(G)$ pa je v teh primerih odlična za lokalno iskanje.
+
+Kljub temu, da je, za generirane grafe, $CLP$ najpogosteje vrnil najboljšo rešitev, lahko v naslednjem grafu vidimo njegovo slabost, $CLP$ je občutno počasnejši od preostalih dveh algoritmov. 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[width=\textwidth]{R_koda/pon-napake.png}
-		\caption{Časovnica SPACa.}
+		\includegraphics[scale=0.12]{R_koda/pon-casi.png}
+		\caption{Časovne zahtevnosti algoritmov za $G(50, 0.3)$}
 	\end{center}
 \end{figure}
+
+Če si pogledamo še odstopanja rešitev $lokalnega \_ iskanja$ od $CLP$ opazimo, da je bila rešitev $lokalnega \_ iskanja$ največkrat za dve vozlišči manjša od rešitve $CLP$.
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.12]{R_koda/pon-napake.png}
+		\caption{Odstopanja rešitev lokalnega iskanja do CLP.}
+	\end{center}
+\end{figure}
+
+
+
+
+
 \vspace{0.5cm}
 \begin{figure}[h!]
 	\begin{center}
