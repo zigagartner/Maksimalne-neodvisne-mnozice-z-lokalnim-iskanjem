@@ -329,7 +329,7 @@ graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje, 
   geom_bar(stat="identity", alpha=0.9,width = 0.6)+
   scale_fill_grey(guide="none")+
   theme_classic()
-graf_pon_povp
+
 ggsave("pon-povpmoc.png", plot = graf_pon_povp)
 
 
@@ -354,7 +354,7 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
   scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(min(podatki.porazdelitev.napak$razlika),max(podatki.porazdelitev.napak$razlika),1))
-graf_porazdelitve_napak
+
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
 
 ## MAXI
@@ -377,7 +377,7 @@ graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.2)) 
-graf_pon_moc_maxi
+
 ggsave("pon-moc-maxi.png", plot = graf_pon_moc_maxi)
 
 
@@ -400,8 +400,39 @@ graf_pon_casi_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=Čas,col=Alg
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
         legend.position = c(0.8, 0.8)) 
-graf_pon_casi_maxi
+
 ggsave("pon-casi-maxi.png", plot = graf_pon_casi_maxi)
 
+#povprečna moč maksimalne neodvisne množice po algoritmih maxi
 
+podatki.ponovitve.maxi1 <- read_csv("grafi1000_maxi.csv") %>% as.data.frame() %>% select(-1) %>%
+  mutate(ponovitev=seq(500))
+
+podatki.ponovitve.maxi1 <- podatki.ponovitve.maxi1[, c(9,1,2,3,4,5,6,7,8)] 
+
+#preimenujemo stolpce
+imena.stolpcev.ponovitve.maxi1 <- c("ponovitev", "najboljsinakljucno", "casinajboljsinakljucno",
+                                   "CLP", "casiCLP", "najboljsilokalnoiskanje","casinajboljsilokalno",
+                                   "nakljucnilokalnoiskanje","casinakljucnilokalnoiskanje")
+colnames(podatki.ponovitve.maxi1) <- imena.stolpcev.ponovitve.maxi1
+
+#tabela moč množice
+
+tabela.moc.ponovitve.maxi1 <- podatki.ponovitve.maxi1 %>% select(c(1,2,4,6,8)) %>%
+  gather(Algoritem, MočMnožice, najboljsinakljucno,CLP,najboljsilokalnoiskanje,nakljucnilokalnoiskanje)
+
+
+#zracunamo povprecje
+podatki.pon.povprecje.maxi <- tabela.moc.ponovitve.maxi1 %>%group_by(Algoritem) %>%
+  summarise(povprecje = mean(MočMnožice)) %>% arrange(desc(povprecje))
+
+#narisemo graf
+graf_pon_povp_maxi <- podatki.pon.povprecje.maxi %>% ggplot(aes(x=reorder(Algoritem, -povprecje), y=povprecje, fill=Algoritem))+
+  ylab("Povprečna moč množice")+
+  ggtitle("Primerjava povprečnih moči maksimalne neodvisne množice po algoritmih, ko večkrat poganjamo naključni algoritem")+
+  geom_bar(stat="identity", alpha=0.9,width = 0.6)+
+  scale_fill_grey(guide="none")+
+  theme_classic()
+
+ggsave("pon-povpmoc-maxi.png", plot = graf_pon_povp_maxi)
 
