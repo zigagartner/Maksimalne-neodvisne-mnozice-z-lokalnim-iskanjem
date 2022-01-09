@@ -128,21 +128,21 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \newpage
 
 \section{Opis dela}
-V nadaljevanju bomo največjo/maksimalne neodvisne množice iskali s pomočjo $CLP$ v Sage in s pomočjo implementiranega algoritma $nakljucni\_MIS(G)$,  kasneje izboljšanega z lokalnim
+V nadaljevanju bomo največje/maksimalne neodvisne množice iskali s pomočjo $CLP$ v Sage in s pomočjo implementiranega algoritma $nakljucni\_MIS(G)$,  kasneje izboljšanega z lokalnim
 iskanjem. Algoritme bomo izvajali na grafih, generiranih s pomočjo \\
 $\text{Erdős-Rényijevega}\ G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
 časovno zahtevnost algoritmov, kasneje pa še, kako vpliva spreminjanje števila vozlišč in verjetnosti, v modelu, na velikost maksimalne (ali pa največje) neodvisne množice in na
 časovno zahtevnost algoritmov.
 
 \subsection{Generiranje podatkov}
-Kot omenjeno, bomo grafe generirali s pomočjo $\text{Erdős-Rényijevega}\ G(n,p)$ modela, kjer podamo algoritmu parameter $n$ za število vozlišč in $p$ za verjetnost, da sta poljubni vozlišči povezani.
+Kot omenjeno, bomo grafe generirali s pomočjo $\text{Erdős-Rényijevega}\ G(n,p)$ modela, kjer podamo algoritmu parameter $n$ za število vozlišč in $p$ za verjetnost povezave med poljubnima vozliščema v grafu.
 
 \begin{definicija}
     $\text{Erdős-Rényijev}$ model $G(n, p)$ generira graf z $n$ naključno povezanimi vozlišči. Vsaka povezava je v graf vključena neodvisno, z verjetnostjo $p$.
 \end{definicija}
 
-\noindent Generirali bomo grafe s spreminjajočima vrednostma $(n,p)$. Najprej z naraščajočim $n$ in konstantnim $p$, nato pa še s konstantim $n$ in naraščajočim $p$. Za generacijo podatkov v Pythonu bomo uporabili
-knjižnico $NetworkX$. Da bomo lahko grafe uporabljali še v okolju $Sage$, bomo le-te s funkcijo $nx.to\_dict\_of\_lists(graf)$, kjer je $nx$ okrajšava za $NetworkX$, pretvorili v slovarje seznamov.
+\noindent Generirali bomo grafe s konstantima vrednostma $(n,p)$ nato z naraščajočim $n$ in konstantnim $p$ in nazadnje še s konstantim $n$ in naraščajočim $p$. Za generacijo podatkov v Pythonu bomo uporabili
+knjižnico $NetworkX$. Da bomo lahko grafe uporabljali še v okolju $Sage$, bomo le-te, s funkcijo $NetworkX.to\_dict\_of\_lists(graf)$, pretvorili v slovarje seznamov.
 Grafe, na katerih bomo izvajali algoritme, bomo shranili v $JSON$ datoteke, da imamo evidenco na kakšnih grafih smo izvajali algoritme.
 
 
@@ -177,11 +177,10 @@ Najprej definirajmo $\tau(v)$, v algoritmu imenovan $tightness(v)$.
 	$$\tau(v) = |W|, \ kjer \ je \ W = \{w|w \in (sosedi(v) \cap V \setminus S)\}.$$
 \end{definicija}
 
-\noindent Algoritem $lokalno\_iskanje(G, I)$ sprejme graf $G$ in neko maksimalno neodvisno množico v grafu $G$. Nato vsakemu vozliscu $v \in I$
-priredi mnozico $L(v) = \{w \in sosedi(v)| \tau(w) = 1\}$. Če je ta množica več kot, ali pa dvo elementna, potem v vseh možnih parih 
-$(x, y) \in L(v) \bigtimes L(v)$, ki zadoščajo $x \neq y$, poišče prvega, da velja $y \notin sosedi(x)$, ko najde prvi tak par iz množice $I$
-odstrani vozlišče $v$, in množici $I$ doda vozlišči $x$ in $y$. Algoritem vrne maksimalno neodvisno množico $I$, ko ne obstaja $z \in I$,
-da bi veljalo $|L(z)| \geq 2$.
+\noindent Algoritem $lokalno\_iskanje(G, I)$ sprejme graf $G$ in neko maksimalno neodvisno množico $I$ v grafu $G$. Nato vsakemu vozlišču $v \in I$
+priredi mnozico $L(v) = \{w \in sosedi(v)| \tau(w) = 1\}$. Nato v vseh možnih parih $(x, y) \in L(v) \bigtimes L(v)$, ki zadoščajo $x \neq y$, 
+poišče prvega, da velja $y \notin sosedi(x)$, ko najde prvi tak par iz množice $I$ odstrani vozlišče $v$, in množici $I$ doda vozlišči $x$ in $y$. 
+Algoritem vrne maksimalno neodvisno množico z lokalnim iskanjem takrat, ko ne obstaja več vozlišče v neodvisni množici, ki bi ga lahko zamenjali z dvema.
 
 \begin{lstlisting}[language=Python, basicstyle=\tiny]
 import networkx as nx
@@ -195,51 +194,41 @@ def tightness(graf, mnozica, v):
             pass
     return t
 
-def lokalno_iskanje(G, I): 
-    V = list(G.nodes)
-    for v in I:
-        L = [] 
-        for w in G.neighbors(v):
-            if G.neighbors(v) != []:
-                if tightness(G, I, w) == 1:
-                    L.append(w)
-                else:
-                    pass
-            else:
-                pass
-        while len(L) >= 2:
-            for v1 in L:
-                L.remove(v1)
-                for w1 in L:
-                    if w1 not in G.neighbors(v1):
-                        I.remove(v)
-                        I = I + [v1, w1]
-                        break
-                    elif w1 in G.neighbors(v1):
-                        pass
+    def lokalno_iskanje(G, I):
+    I = list(I) # naredimo kopijo seznama I, oziroma ga pretvorimo, ce ni v obliki seznama
+    J = [] # seznam vozlisc, ki niso bila nadomescena
+    while I: # ponavljamo, dokler seznam ni prazen
+        v = I.pop(0) # poberemo prvo vozlisce iz I
+        L = [w for w in G.neighbors(v) if tightness(G, I+J, w) == 0]
+        for i, v1 in enumerate(L):
+            for w1 in L[i+1:]: # kopiramo iteratorja - da pregledamo vsak par enkrat
                 if w1 not in G.neighbors(v1):
+                    I += [v1, w1] # dodamo vozlisci v I
                     break
-            if w1 not in G.neighbors(v1):
-                break
-    return I
+            else: # notranja zanka je prisla do konca
+                continue # poskusimo z drugim v1
+            break # notranjo zanko smo prekinili, prekinimo se zunanjo
+        else: # zunanja zanka je prisla do konca
+            J.append(v) # vozlisca v nismo uspeli nadomestiti, pustimo ga v izhodu
+    return J
 \end{lstlisting}
 
 \subsection{Analiza rezultatov}
 
-\subsubsection{Analiza algoritmov na grafih $G(50, 0.3)$}
+\subsubsection{Analiza algoritmov na grafih $G(30, 0.3)$}
 
-Najprej bomo primerjali algoritme na $\text{Erdős-Rényijevih}\ G(50, 0.3)$. Na tak način sva generirala 500 grafov in na njih izvedla algoritma $CLP(G)$, $nakljucni\_MIS(G)$, za vsak graf pa sva slednjega poskušala izboljšati
+Najprej bomo primerjali algoritme na $\text{Erdős-Rényijevih}\ G(30, 0.3)$. Na tak način sva generirala 500 grafov in na njih izvedla algoritma $CLP(G)$, $nakljucni\_MIS(G)$, za vsak graf pa sva slednjega poskušala izboljšati
 še z algoritmom $lokalno\_iskanje(G, I)$, ki poleg grafa $G$ sprejme še $I = nakljucni\_MIS(G)$.\\
 
 \noindent Opazimo, da neodvisne množice največjih moči najde $CLP$. Variacije moči neodvisnih množic,
-ki jih lahko vidimo na spodnjem grafu, so rezultat naključnosti pri generiranju $G(50, 0.3)$ grafov.
+ki jih lahko vidimo na spodnjem grafu, so rezultat naključnosti pri generiranju $G(30, 0.3)$ grafov.
 Od slučaja je namreč odvisno, kako bodo postavljene povezave v grafu $G$.
 
 
 \begin{figure}[h!]
 	\begin{center}
 		\includegraphics[scale=0.11]{R_koda/pon-moc.png}
-		\caption{Moči neodvisnih množic za grafe $G(50,0.3)$}
+		\caption{Moči neodvisnih množic za grafe $G(30,0.3)$}
 	\end{center}
 \end{figure}
 
@@ -249,12 +238,12 @@ Od slučaja je namreč odvisno, kako bodo postavljene povezave v grafu $G$.
 \begin{figure}[h!]
 	\begin{center}
 		\includegraphics[scale=0.11]{R_koda/pon-casi.png}
-		\caption{Časovne zahtevnosti algoritmov za $G(50, 0.3)$}
+		\caption{Časovne zahtevnosti algoritmov za $G(30, 0.3)$}
 	\end{center}
 \end{figure}
 
-\noindent Poglejmo si sedaj še odstopanja rešitev \textit{lokalnega\_iskanja} od rešitev dobljenih s $CLP$. Hitro pazimo, da je odstopanje nekako \textit{"normalno"} porazdeljeno. Neodvisna množica dobljena z  $lokalnim\ iskanjem$ največkrat odstopa za dve vozlišči od tiste dobljene s $CLP$, 
-v nekaj primerih se ti popolnoma ujemata, zelo redko pa se razlikujeta za 4 ali 5 vozlišč.
+\noindent Poglejmo si sedaj še odstopanja rešitev \textit{lokalnega\_iskanja} od rešitev dobljenih s $CLP$. Hitro pazimo, da je odstopanje nekako \textit{"normalno"} porazdeljeno. Neodvisna množica, dobljena z  $lokalnim\ iskanjem$, največkrat odstopa za eno vozlišče, od tiste dobljene s $CLP$, 
+v nekaj primerih se ti popolnoma ujemata, najredkeje pa se razlikujeta za 3 vozlišča.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -263,8 +252,8 @@ v nekaj primerih se ti popolnoma ujemata, zelo redko pa se razlikujeta za 4 ali 
 	\end{center}
 \end{figure}
 
-\noindent Kot omenjeno, je maksimalne neodvisne množice z najvišjimi močmi vračal $CLP$, s povprečno močjo največje neodvisne množice 12. Druge največje množice je vračalo $lokalno\_iskanje$,
-katerega množice so imele v povprečju 9 vozlišč, za eno več od povprečja moči neodvisnih množic najdenih z algoritmom $nakljucni\_MIS$. Rezultati so vidni na spodnjem grafu.
+\noindent Kot omenjeno, je maksimalne neodvisne množice z najvišjimi močmi vračal $CLP$, s povprečno močjo največje neodvisne množice 9. Druge največje množice je vračalo $lokalno\_iskanje$,
+katerega množice so imele v povprečju 8 vozlišč, za eno več od povprečja moči neodvisnih množic najdenih z algoritmom $nakljucni\_MIS$. Rezultati so vidni na spodnjem grafu.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -273,13 +262,13 @@ katerega množice so imele v povprečju 9 vozlišč, za eno več od povprečja m
 	\end{center}
 \end{figure}
 
-\subsubsection{Analiza izboljšanih algoritmov na grafih $G(50, 0.3)$}
+\subsubsection{Analiza izboljšanih algoritmov na grafih $G(30, 0.3)$}
 
 \noindent V nadaljevanju sva poskusila rezultat dobljen z $lokalnim\_iskanjem$ in algoritmom \textit{nakljucni\_MIS} nekoliko izboljšati. 
 Najprej sva za rešitev dobljeno z $nakljucni\_MIS$ vzela najboljšo izmed dvajsetih simulacij za vsak graf, kar je na spodnjem grafu označeno z 
 \textit{Naključno najboljša}. Iz te dobljene neodvisne množice sva potem izhajala pri $lokalnem\_iskanju$ in rešitev označila kot
 \textit{Lokalno najboljša}. Rešitev dobljena s $CLP$ je še zmeraj enaka, sva pa dobila še maksimalne neodvisne množice na način, da sva algoritem $lokalno\_iskanje$
-pognala na 10 različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice} in kot je razvidno, 
+pognala na 5 različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice} in kot je razvidno, 
 sva na ta način dobila najboljše rezultate. V tem primeru celo boljše od $CLP$.
 
 \begin{figure}[h!]
@@ -314,13 +303,12 @@ na različnih začetnih neodvisnih množicah, sva izračunala povprečne moči, 
 \subsubsection{Primerjava algoritmov na grafih s konstantno verjetnostjo $p$ in spremenljivim številom vozlišč $n$}
 
 Drugo skupino grafov sva, tako kot prvo, generirala z $\text{Erdős-Rényijevim}\ G(n, p)$ modelom, vendar pri tem spreminjala število vozlišč v grafih, verjetnost pa ohranila konstantno $p=0.005$.
-Algoritme sva izvajala na grafih velikosti od 1 do 600 vozlišč. Ker je verjetnost konstantna, na rezultate ne vpliva in tako sva si lahko izbrala grafe na večjem številu vozlišč ter pridobila več podatkov za bolj natančno analizo rezultatov.\\
+Algoritme sva izvajala na grafih velikosti od 1 do 600 vozlišč. Ker je verjetnost konstantna, na rezultate nima precejšnjega vpliva, sva si lahko izbrala grafe na večjih številih vozlišč ter pridobila več podatkov za bolj natančno analizo rezultatov.\\
 
 \noindent Na spodnjem grafu si lahko ogledamo kako se s povečevanjem števila vozlišč, spreminja moč maksimalnih neodvisnih množic. Pri konstantni verjetnosti $p$, se moč maksimalne neodvisne množice, v odvisnosti od 
 moči množice vozlišč $V$, povečuje skoraj linearno, vendar moč maksimalnih neodvisnih množic dobljenih s $CLP$ narašča hitreje od tistih pridobljenih z $nakljucni\_MIS$ in
 $lokalnim\ iskanjem$.
 
-\newpage
 
 \begin{figure}[h!]
 	\begin{center}
@@ -330,9 +318,8 @@ $lokalnim\ iskanjem$.
 \end{figure}
 
 \noindent Na spodnjem grafu ponovno opazimo največjo slabost iskanja maksimalne neodvisne množice s $CLP$, tj. časovno zahtevnost. Čas, porabljen za izvajanje $CLP$, je v odvisnosti od števila vozlišč v množici $V$
-naraščal eksponentno. Prav tako je naraščala časovna zahtevnost algortimov $nakljucni\_MIS$ in $lokalnega\_iskanja$, vendar so bila naraščanja na opazovanih grafih občutno manjša.
-Glede na to, da je iskanje maksimalne neodvisne množice $NP$-težek problem lahko pričakujemo, da bi z nadaljnjim povečevanjem števila vozlišč v množici $V$ časovna zahtevnost začela naraščati
-eksponentno tudi za druga dva algoritma. Zametki tega so opazni, ko gledamo časovne zahtevnosti algoritmov $nakljucni\_MIS$ in $lokalnega\ iskanja$ za največje moči množice $V$, na skrajnem desnem robu grafa.
+naraščal eksponentno. Časovna zahtevnost algoritmov $nakljucni\_MIS$ in $lokalnega\_iskanja$ je prav tako naraščala, vendar občutno počasneje, kot pri $CLP$.
+
 
 
 \begin{figure}[h!]
@@ -346,11 +333,11 @@ eksponentno tudi za druga dva algoritma. Zametki tega so opazni, ko gledamo čas
 \subsubsection{Primerjava algoritmov na grafih s konstantim številom vozlišč $n$ in s spremenljivo verjetnostjo $p$}
 
 Tudi zadnjo skupino grafov sva generirala z $\text{Erdős-Rényijevim}\ G(n, p)$ modelom, pri tem pa ohranila konstantno velikost množice vozlišč $V$ in spreminjala verjetnosti $p$.
-Vrednosti verjetnosti sva dobila s klicom funkcije $numpy.linspace(0.1, 0.8, 80)$.\\
+Verjetnosti $p$ sva dobila s klicom funkcije $numpy.linspace(0.1, 0.8, 80)$.\\
 
 \noindent Če je s povečevanjem velikosti množice $V$ naraščala tudi velikost maksimalne neodvisne množice, opazimo, da je v primeru povečevanja verjetnosti $p$ vzorec nasproten, saj
-velikost maksimalne neodvisne množice pada, ko povečujemo verjetnost $p$. Razlog za to se najvrjetneje skriva v vplivu verjetnosti na povezave grafa $G$. 
-Večja kot je verjetnost $p$, večje bo število povezav v grafu, kar je za velikost neodvisne množice slabo, kar sledi neposredno iz definicije neodvisne množice. 
+velikost maksimalne neodvisne množice pada, ko povečujemo verjetnost $p$. Razlog za to se najverjetneje skriva v vplivu verjetnosti na povezave grafa $G$. 
+Večja kot je verjetnost $p$, večje bo število povezav v grafu, kar je za velikost neodvisne množice slabo, saj so verjetnosti, da so vozlišča v grafu sosednja, večje. 
 Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč v grafu, ampak tudi od števila povezav. Ugotovitve so opazne na spodnjem grafu.
 
 \begin{figure}[h!]
@@ -377,8 +364,8 @@ $nakljucni\_MIS$ in $lokalnim\ iskanjem$. Spodnji graf to nazorno prikazuje in p
 
 Iz analize rezultatov lahko zaključimo, da v primeru generiranja grafov z \textit{Erdős-Rényijevim} $G(n, p)$ modelom, na velikost maksimalne neodvisne množice v danem grafu
 vplivata tako število vozlišč v grafu, kot tudi število povezav. Kot alternativo iskanju maksimalne neodvisne množice s $CLP$-jem, sva uspela implementirati algoritem $nakljucni\_MIS$
-in ga kasneje izboljšati z \textit{lokalnim\_iskanjem}. Čeprav so rešitve $CLP$ malenkost boljše v večini primerov, sta $nakljuci\_MIS$ in $lokalno\ iskanje$ boljša za grafe z večjim številom vozlišč,
-ali pa z večjim številom povezav, saj sta manj časovno zahtevna.
+in ga kasneje izboljšati z \textit{lokalnim\_iskanjem}. Čeprav so rešitve $CLP$ malenkost boljše v večini primerov, sta $nakljucni\_MIS$ in $lokalno\ iskanje$ boljša za grafe z večjim številom vozlišč,
+ali pa z večjim številom povezav, saj sta bolj časovno učinkovita.
 
 \newpage
 
