@@ -160,7 +160,7 @@ ggsave("ver-cas.png", plot = graf_ver_casi)
 graf_voz_moc <- podatki.vozlisca %>% ggplot(aes(x=vozlisca,y=MočMnožice,col=Algoritem))+
   geom_line()+
   theme_classic()+
-  ggtitle("Vpliv števila vozlišč na moč maksimalne nedovsine množice")+
+  ggtitle("Vpliv števila vozlišč na moč maksimalne neodvisne množice")+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
@@ -200,9 +200,9 @@ ggsave("voz-cas.png", plot = graf_voz_casi)
 
 #primerjava nihanja moči maksimalne neodvisne množice po algoritmih
 graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
-  geom_line(size=.75)+
-  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,25)) +
-  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0))+
+  geom_line(size=.5)+
+  scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,25,1)) +
+  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
   ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
   scale_color_discrete(name="Tip algoritma",
@@ -276,13 +276,14 @@ podatki.porazdelitev.napak <- read_csv('graf_razlik.csv') %>% select(-1)
 
 graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y=pojavitev))+
   geom_col() +
-  ggtitle("Primerjava rešitev CLP in lokalnega iskanja")+
+  ggtitle("Odstopanje rešitve lokalnega iskanja od CLP")+
+  ylab("Število pojavitev")+
   theme_classic()+
   scale_color_discrete(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "lokalno"="Lokalno iskanje",
                                 "nakljucno"="Naključni"))+
-  theme(axis.title.x = element_text(margin = margin(t = 20)),
+  theme(axis.title.x = element_text(margin = margin(t = 5)),
         legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
@@ -290,6 +291,5 @@ graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y
                                          colour ="black"),
         legend.position = c(0.8, 0.8))+
   scale_x_continuous(name = "Odstopanje lokalne rešitve od CLP", breaks = c(0,max(podatki.porazdelitev.napak$razlika),1))
-
 
 ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
