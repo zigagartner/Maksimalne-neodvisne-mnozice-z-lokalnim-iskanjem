@@ -81,7 +81,7 @@ podatki.vozlisca <- left_join(tabela.casi.voz,tabela.moc.voz,by=c("vozlisca","Al
 ##ISTA VER IN ŠT VOZ VEČKRAT GENERIRAN
 
 podatki.ponovitve <- read_csv("grafi1000.csv") %>% as.data.frame() %>% select(-1) %>%
-  mutate(ponovitev=seq(1000))
+  mutate(ponovitev=seq(500))
 podatki.ponovitve <- podatki.ponovitve[, c(7,1,2,3,4,5,6)] 
 podatki.ponovitve <- podatki.ponovitve %>%
   mutate(casilokalno = podatki.ponovitve$`Casi nakljucno`+podatki.ponovitve$`Casi lokalno`) %>%
@@ -218,11 +218,33 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
 
 ggsave("pon-moc.png", plot = graf_pon_moc)
 
+
+graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
+  geom_line(size=.5)+
+  scale_y_continuous(name = "Moč množice",expand = c(0, 0)) +
+  scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
+  theme_classic()+
+  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
+  scale_color_discrete(name="Tip algoritma",
+                       labels=c("CLP"="CLP",
+                                "lokalno"="Lokalno iskanje",
+                                "nakljucno"="Naključni"))+
+  theme(legend.title = element_text(color = "Black", size = 10),
+        axis.line = element_line(colour = "black", 
+                                 size = .5, linetype = "solid"),
+        legend.background = element_rect(fill = "white", linetype="solid", 
+                                         colour ="black"),
+        legend.position = c(0.8, 0.8)) 
+
+graf_pon_casi
+
+ggsave("pon-casi.png",plot = graf_pon_casi)
+
 #povprečna moč maksimalne neodvisne množice po algoritmih
 
 
 podatki.ponovitve1 <- read_csv("grafi1000.csv") %>% as.data.frame() %>% select(-1) %>%
-  mutate(ponovitev=seq(1000))
+  mutate(ponovitev=seq(500))
 podatki.ponovitve1 <- podatki.ponovitve1[, c(7,1,2,3,4,5,6)] 
 podatki.ponovitve1 <- podatki.ponovitve1 %>%
   mutate(casilokalno = podatki.ponovitve1$`Casi nakljucno`+podatki.ponovitve1$`Casi lokalno`) %>%
