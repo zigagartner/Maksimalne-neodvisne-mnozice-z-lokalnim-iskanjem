@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{etoolbox}
 \usepackage{setspace}
+\usepackage{subcaption}
 \graphicspath{ {./Slike/} }
 \usepackage[
 top    = 2.5cm,
@@ -148,10 +149,29 @@ Grafe, na katerih bomo izvajali algoritme, bomo shranili v $JSON$ datoteke, da i
 
 \subsection{Algoritmi}
 
-Za iskanje maksimalne neodvisne množice smo implementirali algoritem $nakljucni\_MIS(G)$, čigar rešitev bomo poizkušali izboljšati še z algoritmom $lokalno\_iskanje(G, I)$. Oba
-algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I)$ pa še neko maksimalno neodvisno množico $I$ grafa $G$.
+Za iskanje maksimalne neodvisne množice grafa $G=(V,E)$ smo implementirali algoritem $nakljucni\_MIS(G)$, čigar rešitev bomo poizkušali izboljšati še z algoritmom $lokalno\_iskanje(G, I)$. Oba
+algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I)$ pa še neko maksimalno neodvisno množico $I$ grafa $G$. Poleg tega sva največje neodvisne množice iskala 
+še s $CLP$ prilagojenim za naš problem. 
+
+\subsubsection{Algoritem \textit{CLP}}
+
+\begin{algorithm}
+\caption{$CLP(G)$}\label{euclid}
+\begin{algorithmic}[1]
+\State $max \sum_{v \in V} x_{v}$
+\State da velja $x_{v} + x_{w} \leq 1 \ za \ \forall vw \in E$
+\State $x_{u} = 
+\begin{cases}
+1, \ za \ u \in U \\
+0, \ za \ u \notin U
+\end{cases},$ U neodvisna množica v grafu G.
+\end{algorithmic}
+\end{algorithm}
+
 
 \subsubsection{Algoritem \textbf{$nakljucni\_MIS(G)$}}
+
+\newpage
 
 \begin{algorithm}
 \caption{$nakljucni\_MIS(G)$}\label{euclid}
@@ -167,7 +187,6 @@ algoritma bosta kot argument sprejela graf $G$, algoritem $lokalno\_iskanje(G, I
 \end{algorithmic}
 \end{algorithm}
 
-\newpage
 
 \subsubsection{Algoritem $lokalno\_iskanje(G, I)$}
 
@@ -217,7 +236,7 @@ def tightness(graf, mnozica, v):
 
 \subsubsection{Analiza algoritmov na grafih $G(30, 0.3)$}
 
-Najprej bomo primerjali algoritme na $\text{Erdős-Rényijevih}\ G(30, 0.3)$. Na tak način sva generirala 500 grafov in na njih izvedla algoritma $CLP(G)$, $nakljucni\_MIS(G)$, za vsak graf pa sva slednjega poskušala izboljšati
+Najprej bomo primerjali algoritme na $\text{Erdős-Rényijevih}\ G(30, 0.3)$ grafih. Na tak način sva generirala 500 grafov in na njih izvedla algoritma $CLP(G)$, $nakljucni\_MIS(G)$, za vsak graf pa sva slednjega poskušala izboljšati
 še z algoritmom $lokalno\_iskanje(G, I)$, ki poleg grafa $G$ sprejme še $I = nakljucni\_MIS(G)$.\\
 
 \noindent Opazimo, da neodvisne množice največjih moči najde $CLP$. Variacije moči neodvisnih množic,
@@ -242,12 +261,13 @@ Od slučaja je namreč odvisno, kako bodo postavljene povezave v grafu $G$.
 	\end{center}
 \end{figure}
 
-\noindent Poglejmo si sedaj še odstopanja rešitev \textit{lokalnega\_iskanja} od rešitev dobljenih s $CLP$. Hitro pazimo, da je odstopanje nekako \textit{"normalno"} porazdeljeno. Neodvisna množica, dobljena z  $lokalnim\ iskanjem$, največkrat odstopa za eno vozlišče, od tiste dobljene s $CLP$, 
-v nekaj primerih se ti popolnoma ujemata, najredkeje pa se razlikujeta za 3 vozlišča.
+\noindent Poglejmo si sedaj še odstopanja rešitev \textit{lokalnega\_iskanja} od rešitev dobljenih s $CLP$. Hitro pazimo, da je algoritem \textit{lokalno\_iskanje} zelo učinkovit pri iskanju maksimalne neodvisne množice, saj velikokrt 
+poišče neodvisno množico, ki je iste velikosti, kot največja neodvisna množica dobljena s \textit{CLP}. Neodvisna množica, dobljena z  $lokalnim\_iskanjem$, največkrat odstopa za eno vozlišče, od tiste dobljene s $CLP$, 
+v veliko primerih se kot omenjeno ti popolnoma ujemata, najredkeje pa se razlikujeta za 3 vozlišča.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/pon-napake.png}
+		\includegraphics[scale=0.10]{R_koda/pon-napake.png}
 		\caption{Odstopanja rešitev lokalnega iskanja do CLP.}
 	\end{center}
 \end{figure}
@@ -257,7 +277,7 @@ katerega množice so imele v povprečju 8 vozlišč, za eno več od povprečja m
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/pon-povpmoc.png}
+		\includegraphics[scale=0.10]{R_koda/pon-povpmoc.png}
 		\caption{Povprečne vrednosti rezultatov posameznih algoritmov}
 	\end{center}
 \end{figure}
@@ -268,33 +288,36 @@ katerega množice so imele v povprečju 8 vozlišč, za eno več od povprečja m
 Najprej sva za rešitev dobljeno z $nakljucni\_MIS$ vzela najboljšo izmed dvajsetih simulacij za vsak graf, kar je na spodnjem grafu označeno z 
 \textit{Naključno najboljša}. Iz te dobljene neodvisne množice sva potem izhajala pri $lokalnem\_iskanju$ in rešitev označila kot
 \textit{Lokalno najboljša}. Rešitev dobljena s $CLP$ je še zmeraj enaka, sva pa dobila še maksimalne neodvisne množice na način, da sva algoritem $lokalno\_iskanje$
-pognala na 5 različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice} in kot je razvidno, 
+pognala na pet različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice} in kot je razvidno, 
 sva na ta način dobila najboljše rezultate. V tem primeru celo boljše od $CLP$.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale = 0.11]{R_koda/pon-moc-maximalno.png}
+		\includegraphics[scale = 0.12]{R_koda/pon-moc-maximalno.png}
 		\caption{Vrednosti rezultatov izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
 
 \noindent Za zgoraj opisane postopke sva nato izmerila še čase izvajanja. Zelo zanimivo je dejstvo, da najboljše rešitve dobimo s časovno najbolj učinkovitim algoritmom.
 Vmes se pojavijo tudi kakšni izraziti skoki, ki pa jih lahko pripišemo slučaju, saj je čas izvajanja zelo odvisen od vrste grafa, na katerem se algoritem izvede.
-Ker grafe generirava naključno je prav to vzrok za opažene osamelce.
+Ker grafe generirava naključno je prav to vzrok za opažene osamelce. Na drugi strani imamo sedaj priredbi algoritmov $nakljucni\_MIS$, ko le-tega poženeva dvajsetkrat in vzamemo najboljšo rešitev
+ter algoritem $lokalno\_iskanje$, kjer za začetno neodvisno množico vzameva prej omenjeno rešitev $nakljucni\_MIS$. Izkaže se, da imata prav ta dva postopka iskanja neodvisnih množic največjo časovno zahtevnost.
+Zanimivo pa je dejstva, da kljub temu vrneta neodvisne množice najmanjših moči. Se pravi je ta pohlepen pristop, da bi od samega začetka $lokalno\_iskanje$ izvajala na čim večji množici neučinkovit.
+Zaključimo lahko, da z večanjem začetne neodvisne množice algoritem $lokalno\_iskanje$ vrača slabše rešitve.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/pon-casi-maxi.png}
+		\includegraphics[scale=0.12]{R_koda/pon-casi-maxi.png}
 		\caption{Časovne zahtevnosti izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
 
-
+\newpage
 \noindent Da bi se res transparentno prepričali, da v tem primeru najboljše rešitve v povprečju poiščeva z \textit{Lokalno različne neodvisne množice}, ko naredimo algoritem $lokalno\_iskanje$
 na različnih začetnih neodvisnih množicah, sva izračunala povprečne moči, ki jih vračajo algoritmi. Na spodnjem grafu lahko to očitno opazimo.
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.12]{R_koda/pon-povpmoc-maxi.png}
+		\includegraphics[scale=0.11]{R_koda/pon-povpmoc-maxi.png}
 		\caption{Povprečne vrednosti rezultatov izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
@@ -303,16 +326,17 @@ na različnih začetnih neodvisnih množicah, sva izračunala povprečne moči, 
 \subsubsection{Primerjava algoritmov na grafih s konstantno verjetnostjo $p$ in spremenljivim številom vozlišč $n$}
 
 Drugo skupino grafov sva, tako kot prvo, generirala z $\text{Erdős-Rényijevim}\ G(n, p)$ modelom, vendar pri tem spreminjala število vozlišč v grafih, verjetnost pa ohranila konstantno $p=0.005$.
-Algoritme sva izvajala na grafih velikosti od 1 do 600 vozlišč. Ker je verjetnost konstantna, na rezultate nima precejšnjega vpliva, sva si lahko izbrala grafe na večjih številih vozlišč ter pridobila več podatkov za bolj natančno analizo rezultatov.\\
+Algoritme sva izvajala na grafih velikosti od 1 do 600 vozlišč. Ker je verjetnost konstantna in na rezultate nima precejšnjega vpliva, sva si lahko izbrala grafe na večjem številih vozlišč ter pridobila več podatkov za bolj natančno analizo rezultatov.\\
 
-\noindent Na spodnjem grafu si lahko ogledamo kako se s povečevanjem števila vozlišč, spreminja moč maksimalnih neodvisnih množic. Pri konstantni verjetnosti $p$, se moč maksimalne neodvisne množice, v odvisnosti od 
+\noindent Na spodnjem grafu si lahko ogledamo, kako se s povečevanjem števila vozlišč, spreminja moč maksimalnih neodvisnih množic. Pri konstantni verjetnosti $p$, se moč maksimalne neodvisne množice, v odvisnosti od 
 moči množice vozlišč $V$, povečuje skoraj linearno, vendar moč maksimalnih neodvisnih množic dobljenih s $CLP$ narašča hitreje od tistih pridobljenih z $nakljucni\_MIS$ in
-$lokalnim\ iskanjem$.
+$lokalnim\ iskanjem$. Opazimo tudi, da so rešitve vseh treh algoritmov v začetku, ko jih izvajamo na manjših grafih zelo primerljive kar smo opazili tudi v prejšnjem razdelu. Z večanjem 
+števila vozlišč v grafu $G$ vidno narašča tudi razlika med močmi najdenih neodvisnih množic. Razkorak je prvič bolj izrazit na grafu s približno 150 vozlišči. Lahko bi rekli da "napaka" narašča proporcionalno z rastjo množice vozlišč $V$.
 
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/voz-moc.png}
+		\includegraphics[scale=0.12]{R_koda/voz-moc.png}
 		\caption{Velikosti neodvisnih množic v odvisnosti od števila vozlišč $n$}
 	\end{center}
 \end{figure}
@@ -338,25 +362,43 @@ Verjetnosti $p$ sva dobila s klicom funkcije $numpy.linspace(0.1, 0.8, 80)$.\\
 \noindent Če je s povečevanjem velikosti množice $V$ naraščala tudi velikost maksimalne neodvisne množice, opazimo, da je v primeru povečevanja verjetnosti $p$ vzorec nasproten, saj
 velikost maksimalne neodvisne množice pada, ko povečujemo verjetnost $p$. Razlog za to se najverjetneje skriva v vplivu verjetnosti na povezave grafa $G$. 
 Večja kot je verjetnost $p$, večje bo število povezav v grafu, kar je za velikost neodvisne množice slabo, saj so verjetnosti, da so vozlišča v grafu sosednja, večje. 
-Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč v grafu, ampak tudi od števila povezav. Ugotovitve so opazne na spodnjem grafu.
+Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč v grafu, ampak tudi od števila povezav. Ugotovitve so opazne na spodnjem grafu.\\
+
+%\begin{figure}[h!]
+%	\begin{center}
+%		\includegraphics[scale=0.12]{R_koda/ver-moc.png}
+%		\caption{Vpliv verjetnosti na velikost neodvisnih množic}
+%	\end{center}
+%\end{figure}
+
+\noindent Tako kot velikost maksimalne neodvisne množice, je od števila povezav v grafu (oz. verjetnosti $p$), odvisna tudi časovna zahtevnost algoritmov. Časovna zahtevnost algoritmov ob večanju verjetnosti $p$ 
+(in posledično števila povezav v grafu) se obnaša podobno, kot se je obnašala pri večanju števila vozlišč v grafu $G$. Časovna zahtevnost vseh treh algoritmov narašča z verjetnostjo $p$, vendar pri $CLP$ hitreje kot pri algoritmih
+$nakljucni\_MIS$ in $lokalno\_iskanje$. Graf (b) to nazorno prikazuje in potrjuje.
+
+%\begin{figure}[h!]
+%	\begin{center}
+%		\includegraphics[scale=0.12]{R_koda/ver-cas.png}
+%		\caption{Vpliv verjetnosti na časovno zahtevnost algoritmov}
+%	\end{center}
+%\end{figure}
+
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.12]{R_koda/ver-moc.png}
-		\caption{Vpliv verjetnosti na velikost neodvisnih množic}
+		\begin{subfigure}{0.45\textwidth}
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{R_koda/ver-moc.png}
+			\subcaption{Vpliv verjetnosti na velikost neodvisnih množic}
 	\end{center}
-\end{figure}
-
-\noindent Tako kot velikost maksimalne neodvisne množice, je od števila povezav v grafu (oz. verjetnosti $p$), odvisna tudi časovna zahtevnost algoritmov. Časovna zahtevnost algoritmov ob povečevanju verjetnosti $p$ 
-(in posledično števila povezav v grafu) se obnaša podobno, kot se je obnašala pri povečevanju vozlišč. Časovna zahtevnost vseh treh algoritmov narašča z verjetnostjo $p$, vendar pri $CLP$ hitreje kot pri algoritmih
-$nakljucni\_MIS$ in $lokalnim\ iskanjem$. Spodnji graf to nazorno prikazuje in potrjuje.
-
-\begin{figure}[h!]
-	\begin{center}
-		\includegraphics[scale=0.12]{R_koda/ver-cas.png}
-		\caption{Vpliv verjetnosti na časovno zahtevnost algoritmov}
+		\end{subfigure}
+		\begin{subfigure}{0.45\textwidth}
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{R_koda/ver-cas.png}
+			\subcaption{Vpliv verjetnosti na časovno zahtevnost algoritmov} 
 	\end{center}
-\end{figure}
+		\end{subfigure}
+	\end{center}
+	\end{figure}
 
 
 \newpage
