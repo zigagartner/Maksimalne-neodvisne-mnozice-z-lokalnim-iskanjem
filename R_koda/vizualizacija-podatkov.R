@@ -362,8 +362,8 @@ ggsave("pon-napake.png", plot = graf_porazdelitve_napak)
 ## MAXI
 #primerjava moči množic za maxi
 
-graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem))+
-  geom_line(size=.5,alpha=.85)+
+graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algoritem,linetype=Algoritem,alpha=Algoritem))+
+  geom_line()+
   scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
@@ -373,14 +373,17 @@ graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,
                                 "najboljsinakljucno"="Naključni najboljša",
                                 "najboljsilokalnoiskanje"="Lokalno najboljša",
                                 "nakljucnilokalnoiskanje"="Lokalno različne neodvisne množice"),
-                       values=c('darkseagreen','firebrick3', "royalblue", "darkmagenta"))+
+                       values=c('darkmagenta','yellow', "royalblue", "darkseagreen"))+
   theme(legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
                                  size = .5, linetype = "solid"),
         legend.background = element_rect(fill = "white", linetype="solid", 
                                          colour ="black"),
-        legend.position = c(0.8, 0.2)) 
-
+        legend.position = c(0.8, 0.8)) +
+  scale_alpha_manual(breaks=c("CLP", "najboljsinakljucno",
+                              "najboljsilokalnoiskanje", "nakljucnilokalnoiskanje"),
+                     values=c(1, rep(0.7, 3)), guide=FALSE)+
+  guides(linetype = FALSE)
 ggsave("pon-moc-maximalno.png", plot = graf_pon_moc_maxi)
 
 
