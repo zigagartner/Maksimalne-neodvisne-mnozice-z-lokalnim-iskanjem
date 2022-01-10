@@ -332,7 +332,7 @@ podatki.pon.povprecje <- podatki.pon1 %>%group_by(Algoritem) %>%
 graf_pon_povp <- podatki.pon.povprecje %>% ggplot(aes(x=Algoritem, y=povprecje, fill=Algoritem))+
   ylab("Povprečna moč množice")+
   ggtitle("Primerjava povprečnih moči maksimalne neodvisne množice po algoritmih")+
-  geom_bar(stat="identity", alpha=0.9,width = 0.6)+
+  geom_bar(stat="identity", alpha=0.9,width = 0.6, colour="black")+
   scale_fill_grey(guide="none")+
   theme_classic()
 
@@ -344,15 +344,10 @@ ggsave("pon-povpmoc.png", plot = graf_pon_povp)
 podatki.porazdelitev.napak <- read_csv('graf_razlik.csv') %>% select(-1)
 
 graf_porazdelitve_napak <- podatki.porazdelitev.napak %>% ggplot(aes(x=razlika,y=pojavitev))+
-  geom_col() +
+  geom_col(colour="black", width = .7) +
   ggtitle("Odstopanje rešitve lokalnega iskanja od CLP")+
   ylab("Število pojavitev")+
   theme_classic()+
-  scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
-                     name="Tip algoritma",
-                     labels=c("CLP"="CLP",
-                              "lokalno"="Lokalno iskanje",
-                              "nakljucno"="Naključni"))+
   theme(axis.title.x = element_text(margin = margin(t = 5)),
         legend.title = element_text(color = "Black", size = 10),
         axis.line = element_line(colour = "black", 
@@ -439,7 +434,7 @@ graf_pon_povp_maxi <- podatki.pon.povprecje.maxi %>% ggplot(aes(x=reorder(Algori
   ylab("Povprečna moč množice")+
   xlab("Algoritem")+
   ggtitle("Primerjava povprečnih moči maksimalne neodvisne množice po algoritmih, ko večkrat poganjamo naključni algoritem")+
-  geom_bar(stat="identity", alpha=0.9,width = 0.6)+
+  geom_bar(stat="identity", alpha=0.9,width = 0.6,colour="black",)+
   scale_fill_grey(guide="none")+
   theme_classic()
 
