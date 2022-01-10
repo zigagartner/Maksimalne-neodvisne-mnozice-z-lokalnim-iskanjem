@@ -130,7 +130,7 @@ izbiri začetne neodvisne podmnožiče vozlišč $U \subset V$ v kateri $k$ vozl
 \section{Opis dela}
 V nadaljevanju bomo največje/maksimalne neodvisne množice iskali s pomočjo $CLP$ v Sage in s pomočjo implementiranega algoritma $nakljucni\_MIS(G)$,  kasneje izboljšanega z lokalnim
 iskanjem. Algoritme bomo izvajali na grafih, generiranih s pomočjo \\
-\textit{Erdős-Rényijevega}$G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
+$\text{Erdős-Rényijevega}\ G(n,p)$ modela. Primerjali bomo maksimalne (ali pa največje) neodvisne množice, ki jih algoritmi poiščejo,
 časovno zahtevnost algoritmov, kasneje pa še, kako vpliva spreminjanje števila vozlišč in verjetnosti, v modelu, na velikost maksimalne (ali pa največje) neodvisne množice in na
 časovno zahtevnost algoritmov.
 
@@ -231,7 +231,6 @@ Od slučaja je namreč odvisno, kako bodo postavljene povezave v grafu $G$.
 		\caption{Moči neodvisnih množic za grafe $G(30,0.3)$}
 	\end{center}
 \end{figure}
-\newpage
 
 \noindent Kljub temu, da je, za generirane grafe, $CLP$ najpogosteje vrnil najboljšo rešitev, lahko v naslednjem grafu vidimo njegovo slabost. $CLP$ je namreč občutno počasnejši od preostalih dveh algoritmov. 
 
@@ -274,7 +273,7 @@ sva na ta način dobila najboljše rezultate. V tem primeru celo boljše od $CLP
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale = 0.13]{R_koda/pon-moc-maximalno.png}
+		\includegraphics[scale = 0.11]{R_koda/pon-moc-maximalno.png}
 		\caption{Vrednosti rezultatov izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
@@ -285,7 +284,7 @@ Ker grafe generirava naključno je prav to vzrok za opažene osamelce.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.13]{R_koda/pon-casi-maxi.png}
+		\includegraphics[scale=0.11]{R_koda/pon-casi-maxi.png}
 		\caption{Časovne zahtevnosti izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
@@ -295,12 +294,11 @@ Ker grafe generirava naključno je prav to vzrok za opažene osamelce.
 na različnih začetnih neodvisnih množicah, sva izračunala povprečne moči, ki jih vračajo algoritmi. Na spodnjem grafu lahko to očitno opazimo.
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/pon-povpmoc-maxi.png}
+		\includegraphics[scale=0.12]{R_koda/pon-povpmoc-maxi.png}
 		\caption{Povprečne vrednosti rezultatov izboljšanih posameznih algoritmov}
 	\end{center}
 \end{figure}
 
-\newpage
 
 \subsubsection{Primerjava algoritmov na grafih s konstantno verjetnostjo $p$ in spremenljivim številom vozlišč $n$}
 
@@ -314,7 +312,7 @@ $lokalnim\ iskanjem$.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.13]{R_koda/voz-moc.png}
+		\includegraphics[scale=0.11]{R_koda/voz-moc.png}
 		\caption{Velikosti neodvisnih množic v odvisnosti od števila vozlišč $n$}
 	\end{center}
 \end{figure}
@@ -326,27 +324,21 @@ naraščal eksponentno. Časovna zahtevnost algoritmov $nakljucni\_MIS$ in $loka
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.14]{R_koda/voz-cas.png}
+		\includegraphics[scale=0.11]{R_koda/voz-cas.png}
 		\caption{Spreminjanje časovne zahtevnosti algoritmov v odvisnosti od števila vozlišč $n$}
 	\end{center}
 \end{figure}
 
-\newpage
+
 \subsubsection{Primerjava algoritmov na grafih s konstantim številom vozlišč $n$ in s spremenljivo verjetnostjo $p$}
 
 Tudi zadnjo skupino grafov sva generirala z $\text{Erdős-Rényijevim}\ G(n, p)$ modelom, pri tem pa ohranila konstantno velikost množice vozlišč $V$ in spreminjala verjetnosti $p$.
 Verjetnosti $p$ sva dobila s klicom funkcije $numpy.linspace(0.1, 0.8, 80)$.\\
 
 \noindent Če je s povečevanjem velikosti množice $V$ naraščala tudi velikost maksimalne neodvisne množice, opazimo, da je v primeru povečevanja verjetnosti $p$ vzorec nasproten, saj
-<<<<<<< HEAD
-velikost maksimalne neodvisne množice pada, ko povečujemo verjetnost $p$. Razlog za to se najvrjetneje skriva v vplivu verjetnosti na povezave grafa $G$. 
-Večja kot je verjetnost $p$, večje bo število povezav v grafu, kar je za velikost neodvisne množice slabo, kar sledi neposredno iz definicije neodvisne množice. 
-Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč v grafu, ampak tudi od števila povezav. Ugotovitve so opazne na spodnjem grafu 10.\\
-=======
 velikost maksimalne neodvisne množice pada, ko povečujemo verjetnost $p$. Razlog za to se najverjetneje skriva v vplivu verjetnosti na povezave grafa $G$. 
 Večja kot je verjetnost $p$, večje bo število povezav v grafu, kar je za velikost neodvisne množice slabo, saj so verjetnosti, da so vozlišča v grafu sosednja, večje. 
 Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč v grafu, ampak tudi od števila povezav. Ugotovitve so opazne na spodnjem grafu.
->>>>>>> a1871a08d8963f9c73e30bee1e9d7ceab237d1a2
 
 \begin{figure}[h!]
 	\begin{center}
@@ -357,7 +349,7 @@ Torej velikost maksimalne neodvisne množice ni odvisna le od števila vozlišč
 
 \noindent Tako kot velikost maksimalne neodvisne množice, je od števila povezav v grafu (oz. verjetnosti $p$), odvisna tudi časovna zahtevnost algoritmov. Časovna zahtevnost algoritmov ob povečevanju verjetnosti $p$ 
 (in posledično števila povezav v grafu) se obnaša podobno, kot se je obnašala pri povečevanju vozlišč. Časovna zahtevnost vseh treh algoritmov narašča z verjetnostjo $p$, vendar pri $CLP$ hitreje kot pri algoritmih
-$nakljucni\_MIS$ in $lokalnim\ iskanjem$. Graf 11 to nazorno prikazuje in potrjuje.
+$nakljucni\_MIS$ in $lokalnim\ iskanjem$. Spodnji graf to nazorno prikazuje in potrjuje.
 
 \begin{figure}[h!]
 	\begin{center}
