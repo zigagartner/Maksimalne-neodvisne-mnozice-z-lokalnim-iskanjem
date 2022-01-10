@@ -11,8 +11,8 @@
 \usepackage{subcaption}
 \graphicspath{ {./Slike/} }
 \usepackage[
-top    = 2.5cm,
-bottom = 3.cm,
+top    = 2.cm,
+bottom = 2.cm,
 left   = 2.5cm,
 right  = 2.5cm]{geometry}
 \usepackage{hyperref}
@@ -272,6 +272,7 @@ v veliko primerih se kot omenjeno ti popolnoma ujemata, najredkeje pa se razliku
 	\end{center}
 \end{figure}
 
+\newpage
 \noindent Kot omenjeno, je maksimalne neodvisne množice z najvišjimi močmi vračal $CLP$, s povprečno močjo največje neodvisne množice 9. Druge največje množice je vračalo $lokalno\_iskanje$,
 katerega množice so imele v povprečju 8 vozlišč, za eno več od povprečja moči neodvisnih množic najdenih z algoritmom $nakljucni\_MIS$. Rezultati so vidni na spodnjem grafu.
 
@@ -288,8 +289,8 @@ katerega množice so imele v povprečju 8 vozlišč, za eno več od povprečja m
 Najprej sva za rešitev dobljeno z $nakljucni\_MIS$ vzela najboljšo izmed dvajsetih simulacij za vsak graf, kar je na spodnjem grafu označeno z 
 \textit{Naključno najboljša}. Iz te dobljene neodvisne množice sva potem izhajala pri $lokalnem\_iskanju$ in rešitev označila kot
 \textit{Lokalno najboljša}. Rešitev dobljena s $CLP$ je še zmeraj enaka, sva pa dobila še maksimalne neodvisne množice na način, da sva algoritem $lokalno\_iskanje$
-pognala na pet različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice} in kot je razvidno, 
-sva na ta način dobila najboljše rezultate. V tem primeru celo boljše od $CLP$.
+pognala na pet različnih začetnih neodvisnih množicah, dobljenih z $nakljucni\_MIS$. Na grafu je ta rešitev označena z \textit{Lokalno različne neodvisne množice}. Na spodnjem grafu je razvidno, 
+da sva na ta način dobila boljše rezultate kot z eno ponovitvijo $lokalnega\_iskanja$, so pa še zmeraj rešitve dobljene s $CLP$ najboljše, saj z le-tem v kolikor najdemo kakšno rešitev, gre za največjo neodvisno množico.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -298,13 +299,13 @@ sva na ta način dobila najboljše rezultate. V tem primeru celo boljše od $CLP
 	\end{center}
 \end{figure}
 
-\noindent Za zgoraj opisane postopke sva nato izmerila še čase izvajanja. Zelo zanimivo je dejstvo, da najboljše rešitve dobimo s časovno najbolj učinkovitim algoritmom.
+\noindent Za zgoraj opisane postopke sva nato izmerila še čase izvajanja. Časovno najbolj učinkovit algoritem je ponovno variacija $lokalnega\_iskanja$, kjer le-tega poženeva na pet različnih začetnih neodvisnih množicah. Sedaj je 
+čas izvajanja tega algoritma nekoliko večji, vendar z njim dobimo rešitve, ki se zelo približajo rešitvam $CLP$. Če bi število začetnih neodvisnih množic še povečala, bi bili rezultati še boljši, vendar bi s tem naraščala tudi časovna zahtevnost. 
 Vmes se pojavijo tudi kakšni izraziti skoki, ki pa jih lahko pripišemo slučaju, saj je čas izvajanja zelo odvisen od vrste grafa, na katerem se algoritem izvede.
 Ker grafe generirava naključno je prav to vzrok za opažene osamelce. Na drugi strani imamo sedaj priredbi algoritmov $nakljucni\_MIS$, ko le-tega poženeva dvajsetkrat in vzamemo najboljšo rešitev
-ter algoritem $lokalno\_iskanje$, kjer za začetno neodvisno množico vzameva prej omenjeno rešitev $nakljucni\_MIS$. Izkaže se, da imata prav ta dva postopka iskanja neodvisnih množic največjo časovno zahtevnost.
+ter algoritem še eno variacijo algoritma $lokalno\_iskanje$, kjer za začetno neodvisno množico vzameva prej omenjeno (najboljšo) rešitev iz $nakljucni\_MIS$. Izkaže se, da imata prav ta dva postopka iskanja neodvisnih množic največjo časovno zahtevnost.
 Zanimivo pa je dejstva, da kljub temu vrneta neodvisne množice najmanjših moči. Se pravi je ta pohlepen pristop, da bi od samega začetka $lokalno\_iskanje$ izvajala na čim večji množici neučinkovit.
-Zaključimo lahko, da z večanjem začetne neodvisne množice algoritem $lokalno\_iskanje$ vrača slabše rešitve.
-
+Zaključimo lahko, da z večanjem začetne neodvisne množice algoritem $lokalno\_iskanje$ vrača slabše rešitve, z večjim številom različnih začetnih neodvisnih množic pa $lokalno\_iskanje$ vrne zelo primerljive rezultate kot $CLP$.
 \begin{figure}[h!]
 	\begin{center}
 		\includegraphics[scale=0.12]{R_koda/pon-casi-maxi.png}
@@ -341,6 +342,7 @@ $lokalnim\ iskanjem$. Opazimo tudi, da so rešitve vseh treh algoritmov v začet
 	\end{center}
 \end{figure}
 
+
 \noindent Na spodnjem grafu ponovno opazimo največjo slabost iskanja maksimalne neodvisne množice s $CLP$, tj. časovno zahtevnost. Čas, porabljen za izvajanje $CLP$, je v odvisnosti od števila vozlišč v množici $V$
 naraščal eksponentno. Časovna zahtevnost algoritmov $nakljucni\_MIS$ in $lokalnega\_iskanja$ je prav tako naraščala, vendar občutno počasneje, kot pri $CLP$.
 
@@ -348,12 +350,12 @@ naraščal eksponentno. Časovna zahtevnost algoritmov $nakljucni\_MIS$ in $loka
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.11]{R_koda/voz-cas.png}
+		\includegraphics[scale=0.12]{R_koda/voz-cas.png}
 		\caption{Spreminjanje časovne zahtevnosti algoritmov v odvisnosti od števila vozlišč $n$}
 	\end{center}
 \end{figure}
 
-
+\newpage
 \subsubsection{Primerjava algoritmov na grafih s konstantim številom vozlišč $n$ in s spremenljivo verjetnostjo $p$}
 
 Tudi zadnjo skupino grafov sva generirala z $\text{Erdős-Rényijevim}\ G(n, p)$ modelom, pri tem pa ohranila konstantno velikost množice vozlišč $V$ in spreminjala verjetnosti $p$.

@@ -248,7 +248,7 @@ graf_pon_moc <- podatki.pon %>% ggplot(aes(x=ponovitev,y=MočMnožice,col=Algori
   scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
-  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$"))+
+  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(30, 0.3)$"))+
   scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
                      name="Tip algoritma",
                      labels=c("CLP"="CLP",
@@ -269,7 +269,7 @@ graf_pon_casi <- podatki.pon %>% ggplot(aes(x=ponovitev,y=Čas,col=Algoritem))+
   scale_y_continuous(name = "Čas izvajanja [s]",expand = c(0, 0)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
-  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$"))+
+  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(30, 0.3)$"))+
   scale_color_manual(values=c('darkseagreen','firebrick3', "royalblue"),
                      name="Tip algoritma",
                      labels=c("CLP"="CLP",
@@ -367,7 +367,7 @@ graf_pon_moc_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=MočMnožice,
   scale_y_continuous(name = "Moč množice",expand = c(0, 0), limits = c(0,20,1)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
-  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
+  ggtitle(TeX("Primerjava moči maksimalnih neodvisnih množic za grafe $G(30, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
   scale_color_manual(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "najboljsinakljucno"="Naključni najboljša",
@@ -391,7 +391,7 @@ graf_pon_casi_maxi <- podatki.pon.maxi %>% ggplot(aes(x=ponovitev,y=Čas,col=Alg
   scale_y_continuous(name = "Čas izvajanja [s]",expand = c(0, 0)) +
   scale_x_continuous(name = "Zaporedna številka grafa",expand = c(0, 0),limits = c(0,550,50))+
   theme_classic()+
-  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(50, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
+  ggtitle(TeX("Primerjava časov izvajanja algoritmov za grafe $G(30, 0.3)$ \n pri več ponovitvah naključnega algoritma"))+
   scale_color_manual(name="Tip algoritma",
                        labels=c("CLP"="CLP",
                                 "najboljsinakljucno"="Naključni najboljša",
